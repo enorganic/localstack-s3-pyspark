@@ -7,8 +7,8 @@ which you intend to deploy on an Amazon EMR cluster.
 
 ## Installation
 
-Execute the following command, replacing `pip3` with the executable appropriate
-for the environment where you want to configure `pyspark` to use `localhost`:
+Execute the following command, replacing **pip3** with the executable appropriate
+for the environment where you want to configure **pyspark** to use **localstack**:
 
 ```shell
 pip3 install localstack-s3-pyspark

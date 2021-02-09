@@ -102,7 +102,7 @@ def setup(**kwargs: Any) -> None:
 
 setup(
     name="localstack-s3-pyspark",
-    version="0.0.0",
+    version="0.0.1",
     description="A CLI to configure pyspark for use with s3 on localstack",
     author="David Belais",
     author_email="david@belais.me",
