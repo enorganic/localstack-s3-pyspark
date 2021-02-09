@@ -4,23 +4,23 @@ on:
     branches:
       - master
 jobs:
-#  test:
-#    runs-on: ubuntu-latest
-#    strategy:
-#      matrix:
-#        python: [3.6, 3.7, 3.8, 3.9]
-#    steps:
-#    - uses: actions/checkout@v2
-#    - name: Setup Python
-#      uses: actions/setup-python@v2
-#      with:
-#        python-version: ${{ matrix.python }}
-#    - name: Install
-#      run: pip install -e '.[test]'
-#    - name: Tox
-#      run: tox -e py
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python: [3.6, 3.7, 3.8, 3.9]
+    steps:
+    - uses: actions/checkout@v2
+    - name: Setup Python
+      uses: actions/setup-python@v2
+      with:
+        python-version: ${{ matrix.python }}
+    - name: Install
+      run: pip install -e '.[test]'
+    - name: Tox
+      run: tox -e py
   distribute:
-#    needs: test
+    needs: test
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
