@@ -39,7 +39,7 @@ Please note that if you are testing your packages with **tox** (highly
 recommended), you will need to:
 
 - Include "localstack-s3-pyspark" in your installation requirements (either in
-  your setup.py or setup.cfg file, or in the tox **deps** argument
+  your setup.py or setup.cfg file, or in the tox **deps** argument)
 - Include `localstack-s3-pyspark configure-defaults` prior to your tests
   in your list of commands for each test environment
 - Include `docker-compose up -d` in **commands_pre** and `docker-compose down`
