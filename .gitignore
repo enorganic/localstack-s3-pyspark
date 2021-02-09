@@ -1,6 +1,6 @@
 *~
 .*/**
-*/**/.**
+**/.**
 build/**
 dist/**
 venv/**
@@ -8,11 +8,11 @@ venv/**
 **.pyo
 **.egg
 **.sqlite
-**/__pycache__/**
+**/__pycache__
 **/.DS_Store
-*.egg-info/**
-pip-wheel-metadata/**
-!.github/**
+*.egg-info
+pip-wheel-metadata
+!.github
 !.gitignore
 !.flake8
 !.tox
