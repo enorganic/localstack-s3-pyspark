@@ -184,7 +184,8 @@ class SparkDefaults:
         self, type_: type, value: Exception, traceback: Traceback
     ) -> None:
         with open(
-            f"{get_spark_conf_directory()}spark-defaults.conf", "w",
+            f"{get_spark_conf_directory()}spark-defaults.conf",
+            "w",
         ) as file_io:
             file_io.writelines(self._iter_lines())
 
@@ -245,7 +246,12 @@ def add_jar(identifier: str, spark_defaults: SparkDefaults) -> None:
         )
     )
     spark_jars_packages.difference_update(
-        set(filter(_is_version_of_package, spark_jars_packages,))
+        set(
+            filter(
+                _is_version_of_package,
+                spark_jars_packages,
+            )
+        )
     )
     spark_jars_packages.add(f"{qualified_name}:{version}")
     spark_defaults["spark.jars.packages"].clear()

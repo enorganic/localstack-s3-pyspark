@@ -2,13 +2,14 @@
 requires = [
     "setuptools",
     "wheel",
-    "pip>=21"
+    "pip>=21",
 ]
 build-backend = "setuptools.build_meta"
+
 [tool.black]
 line-length = 79
 target-version = [
     "py36",
     "py37",
-    "py38"
+    "py38",
 ]
