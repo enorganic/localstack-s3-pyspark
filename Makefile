@@ -6,7 +6,7 @@ clean:
 	venv/bin/daves-dev-tools clean
 
 requirements:
-	venv/bin/daves-dev-tools requirements update\
+	venv/bin/daves-dev-tools requirements update -ae all\
 	 -v\
 	 setup.cfg\
 	 pyproject.toml\
