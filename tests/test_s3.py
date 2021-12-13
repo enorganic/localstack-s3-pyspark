@@ -1,9 +1,9 @@
 import csv
 import os
 import unittest
+from datetime import datetime
 import boto3  # type: ignore
 from pyspark.sql import SparkSession  # type: ignore
-from datetime import datetime
 from boto3.resources.base import ServiceResource  # type: ignore
 from io import BytesIO, StringIO
 from time import sleep
