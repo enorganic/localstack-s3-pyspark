@@ -44,7 +44,11 @@ def run(command: str) -> str:
 
 @lru_cache()
 def get_spark_home() -> str:
-    return run(f"{sys.executable} -W ignore -m pyspark.find_spark_home")
+    spark_home: str = run(
+        f"{sys.executable} -W ignore -m pyspark.find_spark_home"
+    )
+    print(f"Spark Home: {spark_home}")
+    return spark_home
 
 
 @lru_cache()
@@ -66,8 +70,12 @@ def get_latest_maven_compatible_repo_version(
     """
     Get the HADOOP version pyspark will use
     """
+
+    def major_version_filter_function(version: Tuple[int, ...]) -> bool:
+        return version[0] == major_version
+
     return get_latest_maven_repo_version(
-        name, filter_function=lambda v: v[0] == major_version
+        name, filter_function=major_version_filter_function
     )
 
 
@@ -93,9 +101,15 @@ def iter_maven_jar_versions(name: str) -> Iterable[str]:
             yield href.rstrip("/")
 
 
+def _any_version_filter_function(version: Tuple[int, ...]) -> bool:
+    return True
+
+
 def get_latest_maven_repo_version(
     name: str,
-    filter_function: Callable[[Tuple[int, ...]], bool] = lambda v: True,
+    filter_function: Callable[[Tuple[int, ...]], bool] = (
+        _any_version_filter_function
+    ),
 ) -> str:
     """Find the latest version of a jar"""
     version_int: int
@@ -291,6 +305,10 @@ def main() -> None:
         spark_defaults["spark.hadoop.fs.s3a.access.key"] = "accesskey"
         spark_defaults["spark.hadoop.fs.s3a.secret.key"] = "secretkey"
         spark_defaults["spark.hadoop.fs.s3a.attempts.maximum"] = "1"
+        spark_defaults["spark.hadoop.fs.s3a.change.detection.mode"] = "none"
+        spark_defaults["spark.hadoop.fs.s3a.path.style.access"] = "true"
+        spark_defaults["spark.hadoop.fs.s3a.fast.upload"] = "true"
+        spark_defaults["spark.hadoop.fs.s3a.fast.upload.buffer"] = "bytebuffer"
     print("Success!")
 
 
