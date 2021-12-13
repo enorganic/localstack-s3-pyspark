@@ -21,7 +21,7 @@ jobs:
     - name: Install
       run: make
     - name: Tox
-      run: venv/bin/tox -p all
+      run: venv/bin/tox
   distribute:
     needs:
       - test
