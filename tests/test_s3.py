@@ -33,7 +33,7 @@ class TestS3(unittest.TestCase):
             " up"
             " -d"
         )
-        sleep(10)
+        sleep(20)
         super().__init__(*args, **kwargs)
 
     @property  # type: ignore
@@ -49,7 +49,7 @@ class TestS3(unittest.TestCase):
                 aws_access_key_id="accesskey",
                 aws_secret_access_key="secretkey",
             )
-            .resource("s3")
+            .resource("s3", endpoint_url="http://127.0.0.1:4566")
             .Bucket(
                 datetime.now()
                 .isoformat(sep="-")

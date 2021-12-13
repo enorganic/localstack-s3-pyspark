@@ -1,7 +1,6 @@
 version: "3"
 services:
   localstack:
-    network_mode: bridge
     image: localstack/localstack
     ports:
       - "4566:4566"
