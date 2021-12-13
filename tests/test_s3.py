@@ -1,12 +1,20 @@
-import functools
+import csv
+import os
 import unittest
-import warnings
-from typing import Any
-
+import boto3  # type: ignore
+from pyspark.sql import SparkSession  # type: ignore
+from datetime import datetime
+from boto3.resources.base import ServiceResource  # type: ignore
+from io import BytesIO, StringIO
+from time import sleep
+from typing import Any, Optional
 from localstack_s3_pyspark.boto3 import use_localstack
+from daves_dev_tools.utilities import run, lru_cache
 
-lru_cache: Any = functools.lru_cache
-
+TEST_DIR: str = "test_dir"
+TEST1_CSV_PATH: str = f"{TEST_DIR}/test1.csv"
+TEST2_CSV_PATH: str = f"{TEST_DIR}/test2.csv"
+TESTS_DIRECTORY: str = os.path.abspath(os.path.dirname(__file__))
 use_localstack()
 
 
@@ -16,14 +24,85 @@ class TestS3(unittest.TestCase):
     """
 
     def __init__(self, *args: Any, **kwargs: Any) -> None:
+        self._csv1_bytes: Optional[bytes] = None
+        self._csv2_bytes: Optional[bytes] = None
+        run(
+            "docker-compose"
+            f" -f '{TESTS_DIRECTORY}/docker-compose.yml'"
+            f" --project-directory '{TESTS_DIRECTORY}'"
+            " up"
+            " -d"
+        )
+        sleep(10)
         super().__init__(*args, **kwargs)
 
-    def setUp(self) -> None:
-        warnings.filterwarnings("ignore", category=ResourceWarning)
-        warnings.filterwarnings("ignore", category=DeprecationWarning)
+    @property  # type: ignore
+    @lru_cache()
+    def spark_session(self) -> SparkSession:
+        return SparkSession.builder.enableHiveSupport().getOrCreate()
 
-    def test_placeholder(self) -> None:
-        pass
+    @property  # type: ignore
+    @lru_cache()
+    def bucket(self) -> ServiceResource:
+        bucket: ServiceResource = (
+            boto3.session.Session(
+                aws_access_key_id="accesskey",
+                aws_secret_access_key="secretkey",
+            )
+            .resource("s3")
+            .Bucket(
+                datetime.now()
+                .isoformat(sep="-")
+                .replace(":", "-")
+                .replace(".", "-")
+            )
+        )
+        bucket.create()
+        return bucket
+
+    @property  # type: ignore
+    def csv1(self) -> BytesIO:
+        if self._csv1_bytes is None:
+            with StringIO() as string_io:
+                dict_writer: csv.DictWriter = csv.DictWriter(
+                    string_io, ("a", "b", "c")
+                )
+                dict_writer.writerow(dict(a=1, b=2, c=3))
+                string_io.seek(0)
+                self._csv1_bytes = bytes(string_io.read(), encoding="utf-8")
+        return BytesIO(self._csv1_bytes)
+
+    @property  # type: ignore
+    def csv2(self) -> BytesIO:
+        if self._csv2_bytes is None:
+            with StringIO() as string_io:
+                dict_writer: csv.DictWriter = csv.DictWriter(
+                    string_io, ("a", "b", "c")
+                )
+                dict_writer.writerow(dict(a=4, b=5, c=6))
+                string_io.seek(0)
+                self._csv2_bytes = bytes(string_io.read(), encoding="utf-8")
+        return BytesIO(self._csv2_bytes)
+
+    def test_spark_read(self) -> None:
+        self.bucket.put_object(Key=TEST1_CSV_PATH, Body=self.csv1)
+        self.bucket.put_object(Key=TEST2_CSV_PATH, Body=self.csv2)
+        sleep(10)
+        self.spark_session.read.csv(
+            f"s3://{self.bucket.name}/{TEST1_CSV_PATH}"
+        )
+        self.spark_session.read.csv(
+            f"s3://{self.bucket.name}/{TEST2_CSV_PATH}"
+        )
+        self.bucket.objects.all().delete()
+
+    def __del__(self) -> None:
+        run(
+            "docker-compose"
+            f" -f '{TESTS_DIRECTORY}/docker-compose.yml'"
+            f" --project-directory '{TESTS_DIRECTORY}'"
+            " down"
+        )
 
 
 if __name__ == "__main__":

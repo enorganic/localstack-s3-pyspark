@@ -8,6 +8,7 @@ clean:
 requirements:
 	venv/bin/daves-dev-tools requirements update -ae all\
 	 -v\
+	 -i pyspark\
 	 setup.cfg\
 	 pyproject.toml\
 	 tox.ini && \
