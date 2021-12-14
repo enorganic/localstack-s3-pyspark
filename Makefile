@@ -19,7 +19,7 @@ requirements:
 	mv .requirements.txt requirements.txt
 
 distribute:
-	venv/bin/daves-dev-tools distribute --skip-existing
+	venv/bin/daves-dev-tools distribute --skip-existing --verbose
 
 test:
 	venv/bin/tox -p all
