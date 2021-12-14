@@ -301,7 +301,7 @@ def main() -> None:
             "spark.hadoop.fs.s3.impl"
         ] = "org.apache.hadoop.fs.s3a.S3AFileSystem"
         spark_defaults["spark.hadoop.fs.s3a.connection.ssl.enabled"] = "false"
-        spark_defaults["spark.hadoop.fs.s3a.endpoint"] = "127.0.0.1:4566"
+        spark_defaults["spark.hadoop.fs.s3a.endpoint"] = "localhost:4566"
         spark_defaults["spark.hadoop.fs.s3a.access.key"] = "accesskey"
         spark_defaults["spark.hadoop.fs.s3a.secret.key"] = "secretkey"
         spark_defaults["spark.hadoop.fs.s3a.attempts.maximum"] = "1"

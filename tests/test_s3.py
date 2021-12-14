@@ -49,7 +49,7 @@ class TestS3(unittest.TestCase):
                 aws_access_key_id="accesskey",
                 aws_secret_access_key="secretkey",
             )
-            .resource("s3", endpoint_url="http://127.0.0.1:4566")
+            .resource("s3")
             .Bucket(
                 datetime.now()
                 .isoformat(sep="-")
