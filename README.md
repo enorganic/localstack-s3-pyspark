@@ -66,8 +66,10 @@ commands_post =
 ```
 
 ## Patch *boto3*
+
 If your tests interact with S3 using **boto3**, you can patch boto3 from within
 your unit tests as follows:
+
 ```python3
 from localstack_s3_pyspark.boto3 import use_localstack
 use_localstack()

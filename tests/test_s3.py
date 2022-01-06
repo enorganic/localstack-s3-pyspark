@@ -14,7 +14,7 @@ from daves_dev_tools.utilities import run, lru_cache
 TEST_DIR: str = "test_dir"
 TEST1_CSV_PATH: str = f"{TEST_DIR}/test1.csv"
 TEST2_CSV_PATH: str = f"{TEST_DIR}/test2.csv"
-TESTS_DIRECTORY: str = os.path.abspath(os.path.dirname(__file__))
+TESTS_DIRECTORY: str = os.path.dirname(os.path.abspath(__file__))
 use_localstack()
 
 
