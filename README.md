@@ -42,7 +42,7 @@ recommended), you will need to:
   your setup.py or setup.cfg file, or in the tox **deps** argument)
 - Include `localstack-s3-pyspark configure-defaults` prior to your tests
   in your list of commands for each test environment
-- Include `docker compose up -d` in **commands_pre** and `docker compose down`
+- Include `docker-compose up -d` in **commands_pre** and `docker-compose down`
   in **commands_post**
 
 Here is an example **tox.ini** for this repository:

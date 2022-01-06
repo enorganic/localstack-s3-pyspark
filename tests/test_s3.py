@@ -27,7 +27,7 @@ class TestS3(unittest.TestCase):
         self._csv1_bytes: Optional[bytes] = None
         self._csv2_bytes: Optional[bytes] = None
         run(
-            "docker compose"
+            "docker-compose"
             f" -f '{TESTS_DIRECTORY}/docker-compose.yml'"
             f" --project-directory '{TESTS_DIRECTORY}'"
             " up"
@@ -98,7 +98,7 @@ class TestS3(unittest.TestCase):
 
     def __del__(self) -> None:
         run(
-            "docker compose"
+            "docker-compose"
             f" -f '{TESTS_DIRECTORY}/docker-compose.yml'"
             f" --project-directory '{TESTS_DIRECTORY}'"
             " down"

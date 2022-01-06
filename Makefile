@@ -19,9 +19,11 @@ requirements:
 	 -i pyspark\
 	 setup.cfg\
 	 pyproject.toml\
-	 tox.ini && \
+	 tox.ini\
+	 ci_requirements.txt && \
 	venv/bin/daves-dev-tools requirements freeze\
-	 . pyproject.toml tox.ini daves-dev-tools\
+	 -nv docker-compose\
+	 . pyproject.toml tox.ini ci_requirements.txt\
 	 >> .requirements.txt && \
 	rm requirements.txt && \
 	mv .requirements.txt requirements.txt
@@ -34,7 +36,7 @@ test:
 
 upgrade:
 	venv/bin/daves-dev-tools requirements freeze\
-	 -nv '*' . pyproject.toml tox.ini daves-dev-tools\
+	 -nv '*' . pyproject.toml tox.ini ci_requirements.txt\
 	 >> .unversioned_requirements.txt && \
 	venv/bin/pip3 install --upgrade --upgrade-strategy eager\
 	 -r .unversioned_requirements.txt -e . && \
