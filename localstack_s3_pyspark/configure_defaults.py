@@ -319,7 +319,7 @@ def main() -> None:
         description=(
             "This command updated pyspark's hadoop configuration "
             "for use with localstack"
-        )
+        ),
     )
     arguments: argparse.Namespace = parser.parse_args()
     assert arguments
