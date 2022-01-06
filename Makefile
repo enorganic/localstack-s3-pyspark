@@ -21,7 +21,7 @@ requirements:
 	 pyproject.toml\
 	 tox.ini && \
 	venv/bin/daves-dev-tools requirements freeze\
-	 . pyproject.toml tox.ini requirements.txt\
+	 . pyproject.toml tox.ini daves-dev-tools\
 	 >> .requirements.txt && \
 	rm requirements.txt && \
 	mv .requirements.txt requirements.txt
@@ -34,7 +34,7 @@ test:
 
 upgrade:
 	venv/bin/daves-dev-tools requirements freeze\
-	 -nv '*' . pyproject.toml tox.ini requirements.txt\
+	 -nv '*' . pyproject.toml tox.ini daves-dev-tools\
 	 >> .unversioned_requirements.txt && \
 	venv/bin/pip3 install --upgrade --upgrade-strategy eager\
 	 -r .unversioned_requirements.txt -e . && \
