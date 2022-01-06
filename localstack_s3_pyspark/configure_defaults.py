@@ -317,7 +317,7 @@ def main() -> None:
     parser: argparse.ArgumentParser = argparse.ArgumentParser(
         prog="localstack-s3-pyspark configure-defaults",
         description=(
-            "This command updated pyspark's hadoop configuration "
+            "This command updates pyspark's hadoop configuration "
             "for use with localstack"
         ),
     )
