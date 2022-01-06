@@ -22,7 +22,7 @@ requirements:
 	 tox.ini\
 	 ci_requirements.txt && \
 	venv/bin/daves-dev-tools requirements freeze\
-	 -nv docker-compose -nv docker\
+	 -nv docker-compose -nv docker -nv dockerpty\
 	 . pyproject.toml tox.ini ci_requirements.txt\
 	 >> .requirements.txt && \
 	rm requirements.txt && \

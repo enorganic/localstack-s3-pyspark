@@ -17,7 +17,7 @@ distlib==0.3.4
 distro==1.6.0
 docker
 docker-compose
-dockerpty==0.4.1
+dockerpty
 docopt==0.6.2
 docutils==0.18.1
 filelock==3.4.1
