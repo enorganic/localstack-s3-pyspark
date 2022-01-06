@@ -1,3 +1,4 @@
+import argparse
 import functools
 import os
 import re
@@ -285,7 +286,7 @@ def clear_ivy_cache() -> None:
         pass
 
 
-def main() -> None:
+def configure_defaults() -> None:
     """
     This function alters $SPARK_HOME/conf/spark-defaults.sh so that pyspark
     will use localstack in lieu of AWS endpoints for s3 interactions.
@@ -310,6 +311,19 @@ def main() -> None:
         spark_defaults["spark.hadoop.fs.s3a.fast.upload"] = "true"
         spark_defaults["spark.hadoop.fs.s3a.fast.upload.buffer"] = "bytebuffer"
     print("Success!")
+
+
+def main() -> None:
+    parser: argparse.ArgumentParser = argparse.ArgumentParser(
+        prog="localstack-s3-pyspark configure-defaults",
+        description=(
+            "This command updated pyspark's hadoop configuration "
+            "for use with localstack"
+        )
+    )
+    arguments: argparse.Namespace = parser.parse_args()
+    assert arguments
+    configure_defaults()
 
 
 if __name__ == "__main__":
