@@ -305,7 +305,7 @@ def configure_defaults() -> None:
         spark_defaults["spark.hadoop.fs.s3a.endpoint"] = "localhost:4566"
         spark_defaults["spark.hadoop.fs.s3a.access.key"] = "accesskey"
         spark_defaults["spark.hadoop.fs.s3a.secret.key"] = "secretkey"
-        spark_defaults["spark.hadoop.fs.s3a.attempts.maximum"] = "1"
+        spark_defaults["spark.hadoop.fs.s3a.attempts.maximum"] = "3"
         spark_defaults["spark.hadoop.fs.s3a.change.detection.mode"] = "none"
         spark_defaults["spark.hadoop.fs.s3a.path.style.access"] = "true"
         spark_defaults["spark.hadoop.fs.s3a.fast.upload"] = "true"
