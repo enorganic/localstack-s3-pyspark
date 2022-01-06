@@ -19,6 +19,10 @@ DOCKER_COMPOSE: str = os.path.join(TESTS_DIRECTORY, "docker-compose.yml")
 use_localstack()
 
 
+def is_ci() -> bool:
+    return "CI" in os.environ and (os.environ["CI"].lower() == "true")
+
+
 class TestS3(unittest.TestCase):
     """
     This test case verifies S3 file system functionality
@@ -98,12 +102,13 @@ class TestS3(unittest.TestCase):
         self.bucket.objects.all().delete()
 
     def __del__(self) -> None:
-        run(
-            "docker-compose"
-            f" -f '{TESTS_DIRECTORY}/docker-compose.yml'"
-            f" --project-directory '{TESTS_DIRECTORY}'"
-            " down"
-        )
+        if not is_ci():
+            run(
+                "docker-compose"
+                f" -f '{DOCKER_COMPOSE}'"
+                f" --project-directory '{TESTS_DIRECTORY}'"
+                " down"
+            )
 
 
 if __name__ == "__main__":
