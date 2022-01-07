@@ -14,7 +14,9 @@ from daves_dev_tools.utilities import run, lru_cache
 TEST_ROOT: str = "test-root"
 TEST1_CSV_PATH: str = f"{TEST_ROOT}/test1.csv"
 TEST2_CSV_PATH: str = f"{TEST_ROOT}/test2.csv"
-TESTS_DIRECTORY: str = os.path.dirname(__file__)
+TESTS_DIRECTORY: str = os.path.relpath(
+    os.path.dirname(os.path.abspath(__file__))
+)
 DOCKER_COMPOSE: str = os.path.join(TESTS_DIRECTORY, "docker-compose.yml")
 use_localstack()
 
