@@ -27,15 +27,10 @@ def is_ci() -> bool:
 def docker_compose(command: str) -> None:
     current_directory: str = os.path.abspath(os.path.curdir)
     os.chdir(TESTS_DIRECTORY)
+    if command == "up":
+        command = f"{command} -d"
     try:
-        run(f"docker compose {command}", echo=True)
-    except OSError as error:
-        if command == "up":
-            command = f"{command} -d"
-        try:
-            run(f"docker-compose {command}", echo=True)
-        except OSError:
-            raise error
+        run(f"docker-compose {command}", echo=True)
     finally:
         os.chdir(current_directory)
     sleep(20)
