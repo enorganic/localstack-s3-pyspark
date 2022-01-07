@@ -49,7 +49,7 @@ class TestS3(unittest.TestCase):
     def __init__(self, *args: Any, **kwargs: Any) -> None:
         self._csv1_bytes: Optional[bytes] = None
         self._csv2_bytes: Optional[bytes] = None
-        docker_compose("up -d")
+        docker_compose("up")
         super().__init__(*args, **kwargs)
 
     @property  # type: ignore
