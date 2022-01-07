@@ -25,6 +25,21 @@ def is_ci() -> bool:
     return "CI" in os.environ and (os.environ["CI"].lower() == "true")
 
 
+def docker_compose(command: str = "up -d") -> None:
+    current_directory: str = os.path.abspath(os.path.curdir)
+    os.chdir(TESTS_DIRECTORY)
+    try:
+        run(f"docker compose {command}", echo=True)
+    except OSError as error:
+        try:
+            run("docker-compose {command}", echo=True)
+        except OSError:
+            raise error
+    finally:
+        os.chdir(current_directory)
+    sleep(20)
+
+
 class TestS3(unittest.TestCase):
     """
     This test case verifies S3 file system functionality
@@ -33,16 +48,7 @@ class TestS3(unittest.TestCase):
     def __init__(self, *args: Any, **kwargs: Any) -> None:
         self._csv1_bytes: Optional[bytes] = None
         self._csv2_bytes: Optional[bytes] = None
-        try:
-            run(
-                "docker-compose "
-                f"-f {DOCKER_COMPOSE} "
-                f"--project-directory {TESTS_DIRECTORY} "
-                "up -d"
-            )
-        except OSError:
-            run(f"cd {TESTS_DIRECTORY} && docker compose up -d")
-        sleep(20)
+        docker_compose("up -d")
         super().__init__(*args, **kwargs)
 
     @property  # type: ignore
@@ -107,15 +113,7 @@ class TestS3(unittest.TestCase):
 
     def __del__(self) -> None:
         if not is_ci():
-            try:
-                run(
-                    "docker-compose "
-                    f"-f {DOCKER_COMPOSE} "
-                    f"--project-directory {TESTS_DIRECTORY} "
-                    "down"
-                )
-            except OSError:
-                run(f"cd {TESTS_DIRECTORY} && docker compose down")
+            docker_compose("down")
 
 
 if __name__ == "__main__":
