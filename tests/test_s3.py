@@ -16,8 +16,8 @@ TEST1_CSV_PATH: str = f"{TEST_ROOT}/test1.csv"
 TEST2_CSV_PATH: str = f"{TEST_ROOT}/test2.csv"
 TESTS_DIRECTORY: str = os.path.relpath(
     os.path.dirname(os.path.abspath(__file__))
-)
-DOCKER_COMPOSE: str = os.path.join(TESTS_DIRECTORY, "docker-compose.yml")
+).replace("\\", "/")
+DOCKER_COMPOSE: str = f"{TESTS_DIRECTORY}/docker-compose.yml"
 use_localstack()
 
 
@@ -35,8 +35,8 @@ class TestS3(unittest.TestCase):
         self._csv2_bytes: Optional[bytes] = None
         run(
             "docker-compose"
-            f" -f '{DOCKER_COMPOSE}'"
-            f" --project-directory '{TESTS_DIRECTORY}'"
+            f" -f {DOCKER_COMPOSE}"
+            f" --project-directory {TESTS_DIRECTORY}"
             " up"
             " -d"
         )
