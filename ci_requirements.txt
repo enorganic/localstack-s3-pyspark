@@ -1,2 +1,0 @@
-daves-dev-tools~=1.4
-docker-compose~=1.29
