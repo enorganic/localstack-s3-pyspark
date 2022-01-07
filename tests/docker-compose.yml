@@ -1,6 +1,7 @@
 version: "3"
 services:
   localstack:
+    platform: linux
     image: localstack/localstack
     ports:
       - "4566:4566"
