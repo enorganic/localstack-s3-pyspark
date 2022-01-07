@@ -33,17 +33,15 @@ class TestS3(unittest.TestCase):
     def __init__(self, *args: Any, **kwargs: Any) -> None:
         self._csv1_bytes: Optional[bytes] = None
         self._csv2_bytes: Optional[bytes] = None
-        up_command: str = (
-            "docker compose"
-            f" -f {DOCKER_COMPOSE}"
-            f" --project-directory {TESTS_DIRECTORY}"
-            " up"
-            " -d"
-        )
         try:
-            run(up_command)
+            run(
+                "docker-compose "
+                f"-f {DOCKER_COMPOSE} "
+                f"--project-directory {TESTS_DIRECTORY} "
+                "up -d"
+            )
         except OSError:
-            run(up_command.replace("docker compose", "docker-compose"))
+            run(f"cd {TESTS_DIRECTORY} && docker compose up -d")
         sleep(20)
         super().__init__(*args, **kwargs)
 
@@ -109,16 +107,15 @@ class TestS3(unittest.TestCase):
 
     def __del__(self) -> None:
         if not is_ci():
-            down_command: str = (
-                "docker compose"
-                f" -f '{DOCKER_COMPOSE}'"
-                f" --project-directory '{TESTS_DIRECTORY}'"
-                " down"
-            )
             try:
-                run(down_command)
+                run(
+                    "docker-compose "
+                    f"-f {DOCKER_COMPOSE} "
+                    f"--project-directory {TESTS_DIRECTORY} "
+                    "down"
+                )
             except OSError:
-                run(down_command.replace("docker compose", "docker-compose"))
+                run(f"cd {TESTS_DIRECTORY} && docker compose down")
 
 
 if __name__ == "__main__":
