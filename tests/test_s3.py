@@ -17,7 +17,6 @@ TEST2_CSV_PATH: str = f"{TEST_ROOT}/test2.csv"
 TESTS_DIRECTORY: str = os.path.relpath(
     os.path.dirname(os.path.abspath(__file__))
 ).replace("\\", "/")
-DOCKER_COMPOSE: str = f"{TESTS_DIRECTORY}/docker-compose.yml"
 use_localstack()
 
 
@@ -25,14 +24,16 @@ def is_ci() -> bool:
     return "CI" in os.environ and (os.environ["CI"].lower() == "true")
 
 
-def docker_compose(command: str = "up -d") -> None:
+def docker_compose(command: str) -> None:
     current_directory: str = os.path.abspath(os.path.curdir)
     os.chdir(TESTS_DIRECTORY)
     try:
         run(f"docker compose {command}", echo=True)
     except OSError as error:
+        if command == "up":
+            command = f"{command} -d"
         try:
-            run("docker-compose {command}", echo=True)
+            run(f"docker-compose {command}", echo=True)
         except OSError:
             raise error
     finally:
