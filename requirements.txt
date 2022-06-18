@@ -15,9 +15,9 @@ dataclasses==0.8; python_version == "3.6"
 daves-dev-tools==1.26.0
 distlib==0.3.4
 distro==1.7.0
-docker
-docker-compose
-dockerpty
+docker-compose==1.29.2
+docker==5.0.3
+dockerpty==0.4.1
 docopt==0.6.2
 docutils==0.18.1
 filelock
