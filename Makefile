@@ -3,7 +3,7 @@ install:
 	{ python3.6 -m venv venv || python3 -m venv venv || \
 	py -3.6 -m venv venv || py -3 -m venv venv ; } && \
 	{ . venv/bin/activate || venv/Scripts/activate.bat ; } && \
-	python3 -m pip install --upgrade pip && \
+	python3 -m pip install --upgrade pip twine && \
 	python3 -m pip install\
 	 -r requirements.txt\
 	 -e . && \
