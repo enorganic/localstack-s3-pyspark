@@ -2,7 +2,6 @@
 requires = [
     "setuptools",
     "wheel",
-    "pip>=22",
 ]
 build-backend = "setuptools.build_meta"
 
@@ -12,4 +11,6 @@ target-version = [
     "py36",
     "py37",
     "py38",
+    "py39",
+    "py310",
 ]
