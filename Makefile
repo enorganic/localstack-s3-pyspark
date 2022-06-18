@@ -15,7 +15,6 @@ clean:
 
 requirements:
 	venv/bin/daves-dev-tools requirements update\
-	 -v\
 	 -i pyspark\
 	 setup.cfg\
 	 pyproject.toml\
@@ -38,6 +37,6 @@ upgrade:
 	 -nv '*' . pyproject.toml tox.ini\
 	 >> .unversioned_requirements.txt && \
 	venv/bin/pip3 install --upgrade --upgrade-strategy eager\
-	 -r .unversioned_requirements.txt -e . && \
+	 -r .unversioned_requirements.txt && \
 	rm .unversioned_requirements.txt && \
 	make requirements
