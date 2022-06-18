@@ -26,7 +26,6 @@ idna==3.3
 importlib-metadata
 importlib-resources
 iniconfig==1.1.1
-jeepney==0.7.1
 jmespath==0.10.0
 jsonschema==3.2.0
 keyring==23.4.1
@@ -62,7 +61,6 @@ requests-toolbelt==0.9.1
 requests==2.27.1
 rfc3986==1.5.0
 s3transfer==0.5.2
-SecretStorage==3.3.2
 setuptools==59.6.0
 six==1.16.0
 texttable==1.6.4
