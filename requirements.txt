@@ -24,9 +24,9 @@ filelock
 flake8==4.0.1
 idna==3.3
 importlib-metadata
+importlib-resources
 iniconfig==1.1.1
-jeepney==0.8.0
-jmespath==1.0.1
+jmespath==0.10.0
 jsonschema==3.2.0
 keyring==23.4.1
 localstack-client==1.35
@@ -77,4 +77,4 @@ virtualenv==20.14.1
 webencodings==0.5.1
 websocket-client==0.59.0
 wheel==0.37.1
-zipp==3.8.0
+zipp==3.6.0
