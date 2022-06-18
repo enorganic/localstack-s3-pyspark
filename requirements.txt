@@ -20,7 +20,7 @@ docker-compose
 dockerpty
 docopt==0.6.2
 docutils==0.18.1
-filelock==3.4.1
+filelock
 flake8==4.0.1
 idna==3.3
 importlib-metadata
@@ -40,7 +40,7 @@ paramiko==2.11.0
 pathspec==0.9.0
 pip==21.3.1
 pkginfo==1.8.3
-platformdirs==2.4.0
+platformdirs
 pluggy==1.0.0
 py4j==0.10.9.3
 py==1.11.0
@@ -61,7 +61,7 @@ requests-toolbelt==0.9.1
 requests==2.27.1
 rfc3986==1.5.0
 s3transfer==0.5.2
-setuptools==59.6.0
+setuptools
 six==1.16.0
 texttable==1.6.4
 toml==0.10.2
