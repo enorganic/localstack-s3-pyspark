@@ -30,7 +30,7 @@ def docker_compose(command: str) -> None:
     if command == "up":
         command = f"{command} -d"
     try:
-        run(f"docker compose {command}", echo=True)
+        run(f"docker-compose {command}", echo=True)
     finally:
         os.chdir(current_directory)
     sleep(20)
