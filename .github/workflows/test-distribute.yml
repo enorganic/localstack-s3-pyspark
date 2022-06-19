@@ -6,7 +6,7 @@ on:
   pull_request:
     branches:
     - '*'
-jobs: 
+jobs:
   test:
     runs-on: ${{ matrix.os }}
     strategy:
@@ -31,7 +31,7 @@ jobs:
       with:
         docker_version: latest
         docker_channel: stable
-    - uses: actions/setup-python@v2
+    - uses: actions/setup-python@main
       with:
         python-version: ${{ matrix.python }}
     - name: install
