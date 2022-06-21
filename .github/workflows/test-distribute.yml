@@ -27,10 +27,6 @@ jobs:
       with:
         distribution: 'corretto'
         java-version: '11'
-    - uses: docker-practice/actions-setup-docker@master
-      with:
-        docker_version: latest
-        docker_channel: stable
     - uses: actions/setup-python@main
       with:
         python-version: ${{ matrix.python }}
@@ -49,10 +45,6 @@ jobs:
       with:
         distribution: 'corretto'
         java-version: '11'
-    - uses: docker-practice/actions-setup-docker@master
-      with:
-        docker_version: latest
-        docker_channel: stable
     - uses: actions/setup-python@main
       with:
         python-version: '3.x'
