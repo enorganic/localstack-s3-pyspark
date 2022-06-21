@@ -49,6 +49,17 @@ class TestS3(unittest.TestCase):
     def setUp(self) -> None:
         env: Dict[str, str] = dict(os.environ)
         env.update(SERVICES="s3")
+        if os.name == "nt":
+            env.update(
+                LANG="en_US.utf8",
+                LC_CTYPE="en_US.utf8",
+                LC_NUMERIC="en_US.utf8",
+                LC_TIME="en_US.utf8",
+                LC_COLLATE="en_US.utf8",
+                LC_MONETARY="en_US.utf8",
+                LC_MESSAGES="en_US.utf8",
+                LC_ALL="en_US.utf8",
+            )
         check_call(
             [sys.executable, "-m", "localstack.cli.main", "start", "-d"],
             env=env,
