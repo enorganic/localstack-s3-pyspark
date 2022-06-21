@@ -10,7 +10,7 @@ from pyspark.sql import SparkSession  # type: ignore
 from boto3.resources.base import ServiceResource  # type: ignore
 from io import BytesIO, StringIO
 from time import sleep
-from typing import Any, Callable, Dict, Optional
+from typing import Any, Callable, Dict, List, Optional
 from localstack_s3_pyspark.boto3 import use_localstack
 
 TEST_ROOT: str = "test-root"
@@ -48,8 +48,16 @@ class TestS3(unittest.TestCase):
 
     def setUp(self) -> None:
         env: Dict[str, str] = dict(os.environ)
+        command: List[str] = [
+            sys.executable,
+            "-m",
+            "localstack.cli.main",
+            "start",
+            "-d",
+        ]
         env.update(SERVICES="s3")
         if os.name == "nt":
+            command.append("--host")
             env.update(
                 LANG="en_US.utf8",
                 LC_CTYPE="en_US.utf8",
@@ -61,7 +69,7 @@ class TestS3(unittest.TestCase):
                 LC_ALL="en_US.utf8",
             )
         check_call(
-            [sys.executable, "-m", "localstack.cli.main", "start", "-d"],
+            command,
             env=env,
         )
         sleep(20)
