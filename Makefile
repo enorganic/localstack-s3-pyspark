@@ -39,10 +39,10 @@ upgrade:
 	{ . venv/bin/activate || venv/Scripts/activate.bat ; } && \
 	daves-dev-tools requirements freeze\
 	 -nv '*' . pyproject.toml tox.ini \
-	 > .unversioned_requirements.txt && \
+	 > .requirements.txt && \
 	python3 -m pip install --upgrade --upgrade-strategy eager\
-	 -r .unversioned_requirements.txt && \
-	rm .unversioned_requirements.txt && \
+	 -r .requirements.txt && \
+	rm .requirements.txt && \
 	make requirements
 
 # Update requirement version #'s to match the current environment
