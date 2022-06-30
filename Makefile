@@ -38,7 +38,7 @@ distribute:
 upgrade:
 	{ . venv/bin/activate || venv/Scripts/activate.bat ; } && \
 	daves-dev-tools requirements freeze\
-	 -nv '*' . pyproject.toml tox.ini \
+	 -nv '*' . pyproject.toml tox.ini daves-dev-tools\
 	 > .requirements.txt && \
 	python3 -m pip install --upgrade --upgrade-strategy eager\
 	 -r .requirements.txt && \
