@@ -1,4 +1,0 @@
-{
-    "image": "python:3.6",
-    "onCreateCommand": ["make"]
-}
