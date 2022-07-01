@@ -5,7 +5,6 @@ install:
 	{ . venv/bin/activate || venv/Scripts/activate.bat ; } && \
 	python3 -m pip install --upgrade pip twine && \
 	python3 -m pip install\
-	 --ignore-requires-python\
 	 -r requirements.txt\
 	 -e . && \
 	{ mypy --install-types --non-interactive || echo '' ; } && \
@@ -54,7 +53,7 @@ requirements:
 	 -aen all\
 	 setup.cfg pyproject.toml tox.ini && \
 	daves-dev-tools requirements freeze\
-	 -nv setuptools -nv filelock -nv platformdirs\
+	 -nv '*'\
 	 . pyproject.toml tox.ini daves-dev-tools\
 	 > requirements.txt && \
 	echo "Success!"
