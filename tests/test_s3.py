@@ -57,7 +57,6 @@ class TestS3(unittest.TestCase):
         ]
         env.update(SERVICES="s3")
         if os.name == "nt":
-            command.append("--host")
             env.update(
                 LANG="en_US.utf8",
                 LC_CTYPE="en_US.utf8",
