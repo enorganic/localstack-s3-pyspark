@@ -31,7 +31,7 @@ jmespath==0.10.0
 keyring==23.4.1
 localstack-client==1.35
 localstack-ext==0.14.4
-localstack==0.14.4
+localstack==0.14.3.6
 lxml==4.9.0
 mccabe==0.6.1
 more-itertools==8.13.0
