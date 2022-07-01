@@ -5,6 +5,7 @@ install:
 	{ . venv/bin/activate || venv/Scripts/activate.bat ; } && \
 	python3 -m pip install --upgrade pip twine && \
 	python3 -m pip install\
+	 --ignore-requires-python\
 	 -r requirements.txt\
 	 -e . && \
 	{ mypy --install-types --non-interactive || echo '' ; } && \
