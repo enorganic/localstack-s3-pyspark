@@ -1,4 +1,4 @@
-name: test-distribute
+name: CI
 on:
   push:
     branches:

@@ -1,5 +1,7 @@
 # localstack-s3-pyspark
 
+[![test-distribute](https://github.com/enorganic/localstack-s3-pyspark/actions/workflows/test-distribute.yml/badge.svg)](https://github.com/enorganic/localstack-s3-pyspark/actions/workflows/test-distribute.yml)
+
 This package provides a CLI for configuring pyspark to use
 [localstack](https://github.com/localstack/localstack) for the S3 file system.
 This is intended for testing packages locally (or in your CI/CD pipeline)
