@@ -7,7 +7,7 @@ botocore==1.26.10
 cachetools==3.1.1
 certifi==2022.6.15
 cffi==1.15.1
-charset-normalizer==2.0.12
+chardet==4.0.0
 click==8.0.4
 colorama==0.4.5
 commonmark==0.9.1
@@ -23,7 +23,7 @@ docutils==0.18.1
 ecdsa==0.17.0
 filelock
 flake8==4.0.1
-idna==3.3
+idna==2.10
 importlib-metadata
 importlib-resources
 iniconfig==1.1.1
@@ -63,7 +63,7 @@ python-jose==3.3.0
 PyYAML==6.0
 readme-renderer==34.0
 requests-toolbelt==0.9.1
-requests==2.27.1
+requests==2.25.1
 rfc3986==1.5.0
 rich==12.4.4
 rsa==4.8
