@@ -66,6 +66,7 @@ class TestS3(unittest.TestCase):
                 LC_MONETARY="en_US.utf8",
                 LC_MESSAGES="en_US.utf8",
                 LC_ALL="en_US.utf8",
+                PYTHONIOENCODING="utf-8",
             )
         check_call(
             command,
