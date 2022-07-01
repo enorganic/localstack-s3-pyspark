@@ -7,7 +7,7 @@ botocore
 cachetools
 certifi
 cffi
-chardet
+charset-normalizer
 click
 colorama
 commonmark
@@ -41,7 +41,6 @@ ordered-set
 packaging
 pathspec
 pbr
-pip
 pkginfo
 platformdirs
 pluggy
@@ -86,5 +85,4 @@ typing-extensions
 urllib3
 virtualenv
 webencodings
-wheel
 zipp

@@ -3,7 +3,8 @@ install:
 	{ python3.6 -m venv venv || python3 -m venv venv || \
 	py -3.6 -m venv venv || py -3 -m venv venv ; } && \
 	{ . venv/bin/activate || venv/Scripts/activate.bat ; } && \
-	python3 -m pip install --upgrade pip twine && \
+	{ python3 -m pip install --upgrade pip || echo ""; } && \
+	python3 -m pip install --upgrade twine && \
 	python3 -m pip install\
 	 -r requirements.txt\
 	 -e . && \
@@ -53,6 +54,8 @@ requirements:
 	 -aen all\
 	 setup.cfg pyproject.toml tox.ini && \
 	daves-dev-tools requirements freeze\
+	 -e pip\
+	 -e wheel\
 	 -nv '*'\
 	 . pyproject.toml tox.ini daves-dev-tools\
 	 > requirements.txt && \
