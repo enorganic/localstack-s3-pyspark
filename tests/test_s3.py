@@ -55,15 +55,16 @@ class TestS3(unittest.TestCase):
             "start",
             "-d",
         ]
-        env.update(SERVICES="s3")
-        if os.name == "nt":
-            env.update(
-                PYTHONIOENCODING="utf-8",
-            )
+        env.update(
+            SERVICES="s3,sts",
+            PYTHONIOENCODING="utf-8",
+        )
         check_call(
             command,
             env=env,
+            universal_newlines=True,
         )
+        print(" ".join(command))
         sleep(20)
         return super().setUp()
 
