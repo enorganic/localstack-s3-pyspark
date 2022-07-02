@@ -45,7 +45,7 @@ recommended), you will need to:
   **commands_pre** (or by other means execute this command prior to your tests)
 
 Here is an example **tox.ini** which starts up localstack using the localstack
-CLI (you could also use `docker-compose` or just `docker run`, if you nee
+CLI (you could also use `docker-compose` or just `docker run`, if you need
  greater control or fewer python dependencies, see the the localstack
 documentation
 ["Getting Started" page](https://docs.localstack.cloud/get-started)
