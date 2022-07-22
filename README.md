@@ -1,5 +1,7 @@
 # localstack-s3-pyspark
 
+[![test-distribute](https://github.com/enorganic/localstack-s3-pyspark/actions/workflows/test-distribute.yml/badge.svg)](https://github.com/enorganic/localstack-s3-pyspark/actions/workflows/test-distribute.yml)
+
 This package provides a CLI for configuring pyspark to use
 [localstack](https://github.com/localstack/localstack) for the S3 file system.
 This is intended for testing packages locally (or in your CI/CD pipeline)
@@ -38,31 +40,33 @@ python3 -m localstack_s3_pyspark configure-defaults
 Please note that if you are testing your packages with **tox** (highly
 recommended), you will need to:
 
-- Include "localstack-s3-pyspark" in your installation requirements (either in
-  your setup.py or setup.cfg file, or in the tox **deps** argument)
-- Include `localstack-s3-pyspark configure-defaults` prior to your tests
-  in your list of commands for each test environment
-- Include `docker-compose up -d` in **commands_pre** and `docker-compose down`
-  in **commands_post**
+- Include "localstack-s3-pyspark" in your tox **deps**
+- Include `localstack-s3-pyspark configure-defaults` in your tox
+  **commands_pre** (or by other means execute this command prior to your tests)
 
-Here is an example **tox.ini** for this repository:
+Here is an example **tox.ini** which starts up localstack using the localstack
+CLI (you could also use `docker-compose` or just `docker run`, if you need
+ greater control or fewer python dependencies, see the the localstack
+documentation
+["Getting Started" page](https://docs.localstack.cloud/get-started)
+for details):
 
 ```ini
 [tox]
-envlist = py36, py37, py38, py39
+envlist = pytest
 
-[testenv]
-extras = test
-deps = localstack-s3-pyspark
+[testenv:pytest]
+deps =
+  localstack-s3-pyspark
+  localstack
 commands_pre =
-    docker-compose -f tests/docker-compose.yml --project-directory tests up -d
-commands =
-    flake8
-    mypy
     localstack-s3-pyspark configure-defaults
+    localstack start -d
+    sleep 20
+commands =
     py.test
 commands_post =
-    docker-compose -f tests/docker-compose.yml --project-directory tests down
+    localstack stop
 ```
 
 ## Patch *boto3*

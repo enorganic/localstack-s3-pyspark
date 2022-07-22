@@ -1,15 +1,17 @@
 import csv
 import os
+import sys
 import unittest
-from datetime import datetime
 import boto3  # type: ignore
+import functools
+from datetime import datetime
+from subprocess import check_call
 from pyspark.sql import SparkSession  # type: ignore
 from boto3.resources.base import ServiceResource  # type: ignore
 from io import BytesIO, StringIO
 from time import sleep
-from typing import Any, Optional
+from typing import Any, Callable, Dict, List, Optional
 from localstack_s3_pyspark.boto3 import use_localstack
-from daves_dev_tools.utilities import run, lru_cache
 
 TEST_ROOT: str = "test-root"
 TEST1_CSV_PATH: str = f"{TEST_ROOT}/test1.csv"
@@ -17,23 +19,21 @@ TEST2_CSV_PATH: str = f"{TEST_ROOT}/test2.csv"
 TESTS_DIRECTORY: str = os.path.relpath(
     os.path.dirname(os.path.abspath(__file__))
 ).replace("\\", "/")
+spark_session_lru_cache: Callable[
+    ...,
+    Callable[
+        [Callable[..., SparkSession]],
+        Callable[..., SparkSession],
+    ],
+] = functools.lru_cache  # type: ignore
+service_resource_lru_cache: Callable[
+    ...,
+    Callable[
+        [Callable[..., ServiceResource]],
+        Callable[..., ServiceResource],
+    ],
+] = functools.lru_cache  # type: ignore
 use_localstack()
-
-
-def is_ci() -> bool:
-    return "CI" in os.environ and (os.environ["CI"].lower() == "true")
-
-
-def docker_compose(command: str) -> None:
-    current_directory: str = os.path.abspath(os.path.curdir)
-    os.chdir(TESTS_DIRECTORY)
-    if command == "up":
-        command = f"{command} -d"
-    try:
-        run(f"docker-compose {command}", echo=True)
-    finally:
-        os.chdir(current_directory)
-    sleep(20)
 
 
 class TestS3(unittest.TestCase):
@@ -44,16 +44,44 @@ class TestS3(unittest.TestCase):
     def __init__(self, *args: Any, **kwargs: Any) -> None:
         self._csv1_bytes: Optional[bytes] = None
         self._csv2_bytes: Optional[bytes] = None
-        docker_compose("up")
         super().__init__(*args, **kwargs)
 
+    def setUp(self) -> None:
+        env: Dict[str, str] = dict(os.environ)
+        command: List[str] = [
+            sys.executable,
+            "-m",
+            "localstack.cli.main",
+            "start",
+            "-d",
+        ]
+        env.update(
+            SERVICES="s3,sts",
+            PYTHONIOENCODING="utf-8",
+        )
+        check_call(
+            command,
+            env=env,
+            universal_newlines=True,
+        )
+        print(" ".join(command))
+        sleep(20)
+        return super().setUp()
+
+    def tearDown(self) -> None:
+        check_call(
+            [sys.executable, "-m", "localstack.cli.main", "stop"],
+            universal_newlines=True,
+        )
+        return super().tearDown()
+
     @property  # type: ignore
-    @lru_cache()
+    @spark_session_lru_cache()
     def spark_session(self) -> SparkSession:
         return SparkSession.builder.enableHiveSupport().getOrCreate()
 
     @property  # type: ignore
-    @lru_cache()
+    @service_resource_lru_cache()
     def bucket(self) -> ServiceResource:
         bucket: ServiceResource = (
             boto3.session.Session(
@@ -106,10 +134,6 @@ class TestS3(unittest.TestCase):
             f"s3://{self.bucket.name}/{TEST2_CSV_PATH}"
         )
         self.bucket.objects.all().delete()
-
-    def __del__(self) -> None:
-        if not is_ci():
-            docker_compose("down")
 
 
 if __name__ == "__main__":

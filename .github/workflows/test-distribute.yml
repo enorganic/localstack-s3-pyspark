@@ -1,4 +1,4 @@
-name: test-distribute
+name: CI
 on:
   push:
     branches:
@@ -14,6 +14,7 @@ jobs:
         os:
         - ubuntu-latest
         # - windows-latest
+        # - macos-latest
         python:
         - 3.6
         - 3.7
@@ -21,30 +22,37 @@ jobs:
         - 3.9
         - '3.10'
     steps:
-    - uses: actions/checkout@v2
-    - name: Setup Python
-      uses: actions/setup-python@v2
+    - uses: actions/checkout@main
+    # - uses: actions/setup-java@main
+    #   with:
+    #     distribution: 'corretto'
+    #     java-version: '11'
+    - uses: actions/setup-python@main
       with:
         python-version: ${{ matrix.python }}
     - name: install
-      run: pip3 install --upgrade pip tox docker-compose -r requirements.txt -e .
+      run: make
     - name: test
-      run: tox
+      run: make test
   distribute:
     if: github.ref == 'refs/heads/master'
     needs:
       - test
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v2
-    - name: Setup Python
-      uses: actions/setup-python@v2
+    - uses: actions/checkout@main
+    # - uses: actions/setup-java@main
+    #   with:
+    #     distribution: 'corretto'
+    #     java-version: '11'
+    - uses: actions/setup-python@main
       with:
         python-version: '3.x'
     - name: install
-      run: pip3 install --upgrade pip tox -r requirements.txt -e .
+      run: make
     - name: distribute
       env:
         TWINE_USERNAME: ${{ secrets.PYPI_USERNAME }}
         TWINE_PASSWORD: ${{ secrets.PYPI_PASSWORD }}
-      run: daves-dev-tools distribute --skip-existing
+      run: make distribute
+

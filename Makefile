@@ -1,43 +1,68 @@
+# python 3.6 is used, for the time being, in order to ensure compatibility
 install:
-	(python3.6 -m venv venv || python3 -m venv venv) && \
-	venv/bin/pip3 install --upgrade pip && \
-	venv/bin/pip3 install --upgrade twine -c requirements.txt && \
-	venv/bin/pip3 install -r requirements.txt -e . && \
-	mypy --install-types --non-interactive
+	{ python3.6 -m venv venv || python3 -m venv venv || \
+	py -3.6 -m venv venv || py -3 -m venv venv ; } && \
+	{ . venv/bin/activate || venv/Scripts/activate.bat ; } && \
+	{ python3 -m pip install --upgrade pip || echo ""; } && \
+	python3 -m pip install --upgrade twine && \
+	python3 -m pip install\
+	 -r requirements.txt\
+	 -e . && \
+	{ mypy --install-types --non-interactive || echo '' ; } && \
+	echo "Success!"
 
+# Install dependencies locally where available
+editable:
+	{ . venv/bin/activate || venv/Scripts/activate.bat ; } && \
+	daves-dev-tools install-editable --upgrade-strategy eager && \
+	make requirements && \
+	echo "Success!"
+
+# Cleanup unused packages, and Git-ignored files (such as build files)
 clean:
-	venv/bin/daves-dev-tools uninstall-all\
+	{ . venv/bin/activate || venv/Scripts/activate.bat ; } && \
+	daves-dev-tools uninstall-all\
 	 -e .\
      -e pyproject.toml\
      -e tox.ini\
      -e requirements.txt && \
-	venv/bin/daves-dev-tools clean
+	daves-dev-tools clean && \
+	echo "Success!"
 
-requirements:
-	venv/bin/daves-dev-tools requirements update\
-	 -v\
-	 -i pyspark\
-	 setup.cfg\
-	 pyproject.toml\
-	 tox.ini && \
-	venv/bin/daves-dev-tools requirements freeze\
-	 -nv docker-compose -nv docker -nv dockerpty\
-	 . pyproject.toml tox.ini\
-	 >> .requirements.txt && \
-	rm requirements.txt && \
-	mv .requirements.txt requirements.txt
-
+# Distribute to PYPI
 distribute:
-	venv/bin/daves-dev-tools distribute --skip-existing --verbose
+	{ . venv/bin/activate || venv/Scripts/activate.bat ; } && \
+	daves-dev-tools distribute --skip-existing && \
+	echo "Success!"
 
-test:
-	venv/bin/tox -r -p all
-
+# Upgrade
 upgrade:
-	venv/bin/daves-dev-tools requirements freeze\
-	 -nv '*' . pyproject.toml tox.ini\
-	 >> .unversioned_requirements.txt && \
-	venv/bin/pip3 install --upgrade --upgrade-strategy eager\
-	 -r .unversioned_requirements.txt -e . && \
-	rm .unversioned_requirements.txt && \
+	{ . venv/bin/activate || venv/Scripts/activate.bat ; } && \
+	daves-dev-tools requirements freeze\
+	 -nv '*' . pyproject.toml tox.ini daves-dev-tools\
+	 > .requirements.txt && \
+	python3 -m pip install --upgrade --upgrade-strategy eager\
+	 -r .requirements.txt && \
+	rm .requirements.txt && \
 	make requirements
+
+# Update requirement version #'s to match the current environment
+requirements:
+	{ . venv/bin/activate || venv/Scripts/activate.bat ; } && \
+	daves-dev-tools requirements update\
+	 -i pyspark\
+	 -aen all\
+	 setup.cfg pyproject.toml tox.ini && \
+	daves-dev-tools requirements freeze\
+	 -e pip\
+	 -e wheel\
+	 -nv setuptools -nv filelock -nv platformdirs\
+	 . pyproject.toml tox.ini daves-dev-tools\
+	 > requirements.txt && \
+	echo "Success!"
+
+# Run all tests
+test:
+	{ . venv/bin/activate || venv/Scripts/activate.bat ; } && \
+	pip3 install tox && \
+	tox -r
