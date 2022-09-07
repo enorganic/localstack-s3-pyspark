@@ -4,11 +4,12 @@ import os
 import re
 import shutil
 import sys
+import lxml.etree  # type: ignore
 from collections import OrderedDict
 from http.client import HTTPResponse
 from inspect import Traceback
 from itertools import chain
-from subprocess import getstatusoutput
+from subprocess import check_output
 from typing import (
     Any,
     Callable,
@@ -21,8 +22,6 @@ from typing import (
     Union,
 )
 from urllib.request import urlopen
-
-import lxml.etree  # type: ignore
 from dataclasses import astuple, dataclass
 from pyspark.java_gateway import launch_gateway  # type: ignore
 from pyspark.sql import SparkSession  # type: ignore
@@ -33,23 +32,15 @@ lru_cache: Callable[..., Any] = functools.lru_cache
 MAVEN_ROOT: str = "https://repo1.maven.org/maven2/"
 
 
-def run(command: str) -> str:
-    status: int
-    output: str
-    status, output = getstatusoutput(command)
-    # Create an error if a non-zero exit status is encountered
-    if status:
-        raise OSError(output)
-    return output
-
-
 @lru_cache()
 def get_spark_home() -> str:
-    spark_home: str = run(
-        f"{sys.executable} -W ignore -m pyspark.find_spark_home"
+    spark_home: str = check_output(
+        [sys.executable, "-W", "ignore", "-m", "pyspark.find_spark_home"],
+        encoding="utf-8",
+        universal_newlines=True,
     )
     print(f"Spark Home: {spark_home}")
-    return spark_home
+    return spark_home.strip()
 
 
 @lru_cache()

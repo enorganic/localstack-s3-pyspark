@@ -16,7 +16,6 @@ jobs:
         # - windows-latest
         # - macos-latest
         python:
-        - 3.6
         - 3.7
         - 3.8
         - 3.9
@@ -31,7 +30,7 @@ jobs:
       with:
         python-version: ${{ matrix.python }}
     - name: install
-      run: make
+      run: make ci-install
     - name: test
       run: make test
   distribute:
@@ -49,7 +48,7 @@ jobs:
       with:
         python-version: '3.x'
     - name: install
-      run: make
+      run: make ci-install
     - name: distribute
       env:
         TWINE_USERNAME: ${{ secrets.PYPI_USERNAME }}
