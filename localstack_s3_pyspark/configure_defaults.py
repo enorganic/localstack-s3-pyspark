@@ -271,10 +271,7 @@ def clear_ivy_cache() -> None:
         .sparkContext.getConf()
         .get("spark.jars.ivy", "~/.ivy2")
     )
-    try:
-        shutil.rmtree(os.path.expanduser(ivy_directory))
-    except FileNotFoundError:
-        pass
+    shutil.rmtree(os.path.expanduser(ivy_directory), ignore_errors=True)
 
 
 def configure_defaults() -> None:
