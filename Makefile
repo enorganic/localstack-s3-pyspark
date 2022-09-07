@@ -1,11 +1,9 @@
 # python 3.6 is used, for the time being, in order to ensure compatibility
 install:
-	{ python3.6 -m venv venv || python3 -m venv venv || \
-	py -3.6 -m venv venv || py -3 -m venv venv ; } && \
+	{ python3.7 -m venv venv || py -3.7 -m venv venv ; } && \
 	{ . venv/bin/activate || venv/Scripts/activate.bat ; } && \
-	{ python3 -m pip install --upgrade pip || echo ""; } && \
-	python3 -m pip install --upgrade twine && \
-	python3 -m pip install\
+	{ pip3 install --upgrade pip wheel || echo ""; } && \
+	pip3 install\
 	 -r requirements.txt\
 	 -e . && \
 	{ mypy --install-types --non-interactive || echo '' ; } && \
@@ -41,7 +39,7 @@ upgrade:
 	daves-dev-tools requirements freeze\
 	 -nv '*' . pyproject.toml tox.ini daves-dev-tools\
 	 > .requirements.txt && \
-	python3 -m pip install --upgrade --upgrade-strategy eager\
+	pip3 install --upgrade --upgrade-strategy eager\
 	 -r .requirements.txt && \
 	rm .requirements.txt && \
 	make requirements
