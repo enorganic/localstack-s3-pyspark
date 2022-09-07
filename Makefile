@@ -9,6 +9,15 @@ install:
 	{ mypy --install-types --non-interactive || echo '' ; } && \
 	echo "Success!"
 
+ci-install:
+	{ python3 -m venv venv || py -3 -m venv venv ; } && \
+	{ . venv/bin/activate || venv/Scripts/activate.bat ; } && \
+	{ pip3 install --upgrade pip wheel || echo ""; } && \
+	pip3 install\
+	 -r requirements.txt\
+	 -e . && \
+	echo "Success!"
+
 # Install dependencies locally where available
 editable:
 	{ . venv/bin/activate || venv/Scripts/activate.bat ; } && \
