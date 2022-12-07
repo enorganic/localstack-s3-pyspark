@@ -5,6 +5,7 @@ import re
 import shutil
 import sys
 import lxml.etree  # type: ignore
+from py4j.protocol import Py4JJavaError  # type: ignore
 from collections import OrderedDict
 from http.client import HTTPResponse
 from inspect import Traceback
@@ -266,12 +267,15 @@ def add_jar(identifier: str, spark_defaults: SparkDefaults) -> None:
 
 def clear_ivy_cache() -> None:
     print("Clearing the ivy cache")
-    ivy_directory: str = (
-        SparkSession.builder.getOrCreate()
-        .sparkContext.getConf()
-        .get("spark.jars.ivy", "~/.ivy2")
-    )
-    shutil.rmtree(os.path.expanduser(ivy_directory), ignore_errors=True)
+    try:
+        ivy_directory: str = (
+            SparkSession.builder.getOrCreate()
+            .sparkContext.getConf()
+            .get("spark.jars.ivy", "~/.ivy2")
+        )
+        shutil.rmtree(os.path.expanduser(ivy_directory), ignore_errors=True)
+    except Py4JJavaError:
+        pass
 
 
 def configure_defaults() -> None:
