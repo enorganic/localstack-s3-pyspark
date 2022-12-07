@@ -83,35 +83,6 @@ class TestS3(unittest.TestCase):
         )
         return super().tearDownClass()
 
-    def setUp(self) -> None:
-        env: Dict[str, str] = dict(os.environ)
-        command: List[str] = [
-            sys.executable,
-            "-m",
-            "localstack.cli.main",
-            "start",
-            "-d",
-        ]
-        env.update(
-            SERVICES="s3,sts",
-            PYTHONIOENCODING="utf-8",
-        )
-        check_call(
-            command,
-            env=env,
-            universal_newlines=True,
-        )
-        print(" ".join(command))
-        sleep(20)
-        return super().setUp()
-
-    def tearDown(self) -> None:
-        check_call(
-            [sys.executable, "-m", "localstack.cli.main", "stop"],
-            universal_newlines=True,
-        )
-        return super().tearDown()
-
     @property  # type: ignore
     @spark_session_lru_cache()
     def spark_session(self) -> SparkSession:
