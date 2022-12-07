@@ -1,5 +1,6 @@
 import csv
 import os
+from pathlib import Path
 import sys
 import unittest
 import boto3  # type: ignore
@@ -13,12 +14,10 @@ from time import sleep
 from typing import Any, Callable, Dict, List, Optional
 from localstack_s3_pyspark.boto3 import use_localstack
 
+TESTS_PATH: Path = Path(__file__).absolute().parent
 TEST_ROOT: str = "test-root"
 TEST1_CSV_PATH: str = f"{TEST_ROOT}/test1.csv"
 TEST2_CSV_PATH: str = f"{TEST_ROOT}/test2.csv"
-TESTS_DIRECTORY: str = os.path.relpath(
-    os.path.dirname(os.path.abspath(__file__))
-).replace("\\", "/")
 spark_session_lru_cache: Callable[
     ...,
     Callable[
@@ -45,6 +44,44 @@ class TestS3(unittest.TestCase):
         self._csv1_bytes: Optional[bytes] = None
         self._csv2_bytes: Optional[bytes] = None
         super().__init__(*args, **kwargs)
+
+    @classmethod
+    def setUpClass(cls) -> None:
+        command: List[str] = [
+            "docker",
+            "compose",
+            "-f",
+            str(TESTS_PATH.joinpath("docker-compose.yml")),
+            "--project-directory",
+            str(TESTS_PATH),
+            "up",
+            "-d",
+        ]
+        print(" ".join(command))
+        check_call(
+            command,
+            universal_newlines=True,
+        )
+        sleep(20)
+        return super().setUpClass()
+
+    @classmethod
+    def tearDownClass(cls) -> None:
+        command: List[str] = [
+            "docker",
+            "compose",
+            "-f",
+            str(TESTS_PATH.joinpath("docker-compose.yml")),
+            "--project-directory",
+            str(TESTS_PATH),
+            "down",
+        ]
+        print(" ".join(command))
+        check_call(
+            command,
+            universal_newlines=True,
+        )
+        return super().tearDownClass()
 
     def setUp(self) -> None:
         env: Dict[str, str] = dict(os.environ)

@@ -6,6 +6,7 @@ install:
 	pip3 install\
 	 -r requirements.txt\
 	 -e . && \
+	localstack-s3-pyspark configure-defaults && \
 	{ mypy --install-types --non-interactive || echo '' ; } && \
 	echo "Success!"
 
