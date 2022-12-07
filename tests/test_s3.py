@@ -1,7 +1,5 @@
 import csv
-import os
 from pathlib import Path
-import sys
 import unittest
 import boto3  # type: ignore
 import functools
@@ -11,7 +9,7 @@ from pyspark.sql import SparkSession  # type: ignore
 from boto3.resources.base import ServiceResource  # type: ignore
 from io import BytesIO, StringIO
 from time import sleep
-from typing import Any, Callable, Dict, List, Optional
+from typing import Any, Callable, List, Optional
 from localstack_s3_pyspark.boto3 import use_localstack
 
 TESTS_PATH: Path = Path(__file__).absolute().parent
