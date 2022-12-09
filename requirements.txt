@@ -5,7 +5,7 @@ bleach==5.0.1
 boto3==1.26.24
 botocore==1.29.24
 cachetools==5.0.0
-certifi==2022.9.24
+certifi==2022.12.7
 cffi==1.15.1
 chardet==4.0.0
 click==8.1.3
