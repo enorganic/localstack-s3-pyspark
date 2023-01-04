@@ -177,14 +177,10 @@ class SparkDefaults:
             column_width: int = max(len(key) for key in self._dict.keys()) + 1
             for key, values in self._dict.items():
                 if values:
-                    value: str
-                    for value in sorted(values):
-                        if " " in value:
-                            value = value.replace('"', '"')
-                            value = f'"{value}"'
-                        yield (
-                            f"{key}{' ' * (column_width - len(key))}{value}\n"
-                        )
+                    yield (
+                        f"{key}{' ' * (column_width - len(key))}"
+                        f"{','.join(sorted(values))}\n"
+                    )
             yield ""
 
     def __exit__(
