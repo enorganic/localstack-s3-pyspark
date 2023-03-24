@@ -134,7 +134,6 @@ def _line_is_not_empty(line: str) -> bool:
 
 
 class SparkDefaults:
-
     __slots__ = ("_dict",)
 
     def __init__(self) -> None:
@@ -144,6 +143,9 @@ class SparkDefaults:
         values: Set[str] = self._dict.get(key, set())
         self._dict[key] = values
         return values
+
+    def __delitem__(self, key: str) -> None:
+        del self._dict[key]
 
     def __setitem__(self, key: str, values: Union[Iterable[str], str]) -> None:
         if not isinstance(values, set):
@@ -201,7 +203,6 @@ class SparkDefaults:
 
 @dataclass
 class MavenPackage:
-
     identifier: str
     path: str
     qualified_name: str
@@ -274,9 +275,9 @@ def clear_ivy_cache() -> None:
         pass
 
 
-def configure_defaults() -> None:
+def configure_defaults(use_localstack: bool = True) -> None:
     """
-    This function alters $SPARK_HOME/conf/spark-defaults.sh so that pyspark
+    This function alters $SPARK_HOME/conf/spark-defaults.conf so that pyspark
     will use localstack in lieu of AWS endpoints for s3 interactions.
     """
     hadoop_version: str = get_hadoop_version()
@@ -290,14 +291,19 @@ def configure_defaults() -> None:
             "spark.hadoop.fs.s3.impl"
         ] = "org.apache.hadoop.fs.s3a.S3AFileSystem"
         spark_defaults["spark.hadoop.fs.s3a.connection.ssl.enabled"] = "false"
-        spark_defaults["spark.hadoop.fs.s3a.endpoint"] = "localhost:4566"
-        spark_defaults["spark.hadoop.fs.s3a.access.key"] = "accesskey"
-        spark_defaults["spark.hadoop.fs.s3a.secret.key"] = "secretkey"
         spark_defaults["spark.hadoop.fs.s3a.attempts.maximum"] = "3"
         spark_defaults["spark.hadoop.fs.s3a.change.detection.mode"] = "none"
         spark_defaults["spark.hadoop.fs.s3a.path.style.access"] = "true"
         spark_defaults["spark.hadoop.fs.s3a.fast.upload"] = "true"
         spark_defaults["spark.hadoop.fs.s3a.fast.upload.buffer"] = "bytebuffer"
+        if use_localstack:
+            spark_defaults["spark.hadoop.fs.s3a.endpoint"] = "localhost:4566"
+            spark_defaults["spark.hadoop.fs.s3a.access.key"] = "accesskey"
+            spark_defaults["spark.hadoop.fs.s3a.secret.key"] = "secretkey"
+        else:
+            del spark_defaults["spark.hadoop.fs.s3a.endpoint"]
+            del spark_defaults["spark.hadoop.fs.s3a.access.key"]
+            del spark_defaults["spark.hadoop.fs.s3a.secret.key"]
     print("Success!")
 
 
@@ -309,9 +315,17 @@ def main() -> None:
             "for use with localstack"
         ),
     )
-    arguments: argparse.Namespace = parser.parse_args()
-    assert arguments
-    configure_defaults()
+    parser.add_argument(
+        "-nl",
+        "--non-local",
+        const=True,
+        default=False,
+        action="store_const",
+        help="Configure S3 only (don't connect to localstack)",
+    )
+    namespace: argparse.Namespace = parser.parse_args()
+    assert namespace
+    configure_defaults(use_localstack=(not namespace.non_local))
 
 
 if __name__ == "__main__":
