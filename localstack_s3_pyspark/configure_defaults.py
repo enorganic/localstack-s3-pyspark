@@ -133,6 +133,9 @@ def _line_is_not_empty(line: str) -> bool:
     return True if line.strip() else False
 
 
+_UNDEFINED: object = object()
+
+
 class SparkDefaults:
     __slots__ = ("_dict",)
 
@@ -146,6 +149,12 @@ class SparkDefaults:
 
     def __delitem__(self, key: str) -> None:
         del self._dict[key]
+
+    def pop(self, key: str, default: Any = _UNDEFINED) -> Any:
+        if default is _UNDEFINED:
+            return self._dict.pop(key)
+        else:
+            return self._dict.pop(key, default)
 
     def __setitem__(self, key: str, values: Union[Iterable[str], str]) -> None:
         if not isinstance(values, set):
@@ -290,20 +299,25 @@ def configure_defaults(use_localstack: bool = True) -> None:
         spark_defaults[
             "spark.hadoop.fs.s3.impl"
         ] = "org.apache.hadoop.fs.s3a.S3AFileSystem"
-        spark_defaults["spark.hadoop.fs.s3a.connection.ssl.enabled"] = "false"
-        spark_defaults["spark.hadoop.fs.s3a.attempts.maximum"] = "3"
-        spark_defaults["spark.hadoop.fs.s3a.change.detection.mode"] = "none"
         spark_defaults["spark.hadoop.fs.s3a.path.style.access"] = "true"
         spark_defaults["spark.hadoop.fs.s3a.fast.upload"] = "true"
         spark_defaults["spark.hadoop.fs.s3a.fast.upload.buffer"] = "bytebuffer"
+        spark_defaults["spark.hadoop.fs.s3a.change.detection.mode"] = "none"
+        spark_defaults["spark.hadoop.fs.s3a.attempts.maximum"] = "3"
         if use_localstack:
+            spark_defaults[
+                "spark.hadoop.fs.s3a.connection.ssl.enabled"
+            ] = "false"
             spark_defaults["spark.hadoop.fs.s3a.endpoint"] = "localhost:4566"
             spark_defaults["spark.hadoop.fs.s3a.access.key"] = "accesskey"
             spark_defaults["spark.hadoop.fs.s3a.secret.key"] = "secretkey"
         else:
-            del spark_defaults["spark.hadoop.fs.s3a.endpoint"]
-            del spark_defaults["spark.hadoop.fs.s3a.access.key"]
-            del spark_defaults["spark.hadoop.fs.s3a.secret.key"]
+            spark_defaults.pop(
+                "spark.hadoop.fs.s3a.connection.ssl.enabled", None
+            )
+            spark_defaults.pop("spark.hadoop.fs.s3a.endpoint", None)
+            spark_defaults.pop("spark.hadoop.fs.s3a.access.key", None)
+            spark_defaults.pop("spark.hadoop.fs.s3a.secret.key", None)
     print("Success!")
 
 
