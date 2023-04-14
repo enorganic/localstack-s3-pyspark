@@ -76,8 +76,8 @@ def iter_links(url: str) -> Iterable[str]:
     http_response_io: HTTPResponse
     with urlopen(url) as http_response:
         html: str = str(http_response.read(), encoding="utf-8")
-        root: lxml.etree.ElementBase = lxml.etree.HTML(html)
-    element: lxml.etree.ElementBase
+        root: Any = lxml.etree.HTML(html)
+    element: Any
     for element in root.findall(".//a"):
         if element.attrib.get("href", ""):
             yield element.attrib["href"]
