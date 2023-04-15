@@ -284,7 +284,9 @@ def clear_ivy_cache() -> None:
         pass
 
 
-def configure_defaults(use_localstack: bool = True) -> None:
+def configure_defaults(
+    use_localstack: bool = True, conf: Iterable[str] = ()
+) -> None:
     """
     This function alters $SPARK_HOME/conf/spark-defaults.conf so that pyspark
     will use localstack in lieu of AWS endpoints for s3 interactions.
@@ -318,6 +320,14 @@ def configure_defaults(use_localstack: bool = True) -> None:
             spark_defaults.pop("spark.hadoop.fs.s3a.endpoint", None)
             spark_defaults.pop("spark.hadoop.fs.s3a.access.key", None)
             spark_defaults.pop("spark.hadoop.fs.s3a.secret.key", None)
+        configuration: str
+        for configuration in conf:
+            key: str
+            value: str
+            separator: str
+            key, separator, value = configuration.partition("=")
+            if separator:
+                spark_defaults[key] = value
     print("Success!")
 
 
@@ -337,9 +347,18 @@ def main() -> None:
         action="store_const",
         help="Configure S3 only (don't connect to localstack)",
     )
+    parser.add_argument(
+        "--conf",
+        default=[],
+        type=str,
+        action="append",
+        help="Additional spark configurations to set",
+    )
     namespace: argparse.Namespace = parser.parse_args()
     assert namespace
-    configure_defaults(use_localstack=(not namespace.non_local))
+    configure_defaults(
+        use_localstack=(not namespace.non_local), conf=namespace.conf
+    )
 
 
 if __name__ == "__main__":
