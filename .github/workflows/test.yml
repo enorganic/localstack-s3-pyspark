@@ -36,14 +36,10 @@ jobs:
         java-version: 8
     - name: Install docker on macos
       if: runner.os == 'macos'
-      run: |
-        brew install docker-slim docker-machine docker-compose && \
-        brew upgrade docker-slim docker-machine docker-compose
+      run: brew install docker
     - name: Install docker on windows
       if: runner.os == 'windows'
-      run: |
-        choco install docker-cli && \
-        choco upgrade docker-compose docker-cli
+      run: choco install docker
     - name: install
       run: make ci-install
     - name: test
