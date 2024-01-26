@@ -32,7 +32,9 @@ jobs:
         python-version: ${{ matrix.python }}
     - name: Install docker on macos
       if: runner.os == 'macos'
-      run: brew install docker-compose
+      run: |
+        brew install docker-compose && \
+        brew upgrade docker-compose
     - name: Install docker on windows
       if: runner.os == 'windows'
       run: choco install docker-compose
