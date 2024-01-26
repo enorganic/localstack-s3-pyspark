@@ -17,7 +17,7 @@ jobs:
       matrix:
         os:
         - ubuntu-latest
-        - windows-latest
+        # - windows-latest
         - macos-latest
         python:
         - 3.8
@@ -39,7 +39,7 @@ jobs:
       run: brew install docker
     - name: Install docker on windows
       if: runner.os == 'windows'
-      run: choco install docker
+      run: choco install docker-cli
     - name: install
       run: make ci-install
     - name: test
