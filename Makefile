@@ -72,5 +72,12 @@ requirements:
 # Run all tests
 test:
 	{ . venv/bin/activate || venv/Scripts/activate.bat ; } && \
-	pip3 install tox && \
-	tox -r
+	if [[ "$$(python -V)" = "Python 3.8."* ]] ;\
+	then tox run -r ;\
+	else tox run -r --skip-env 'black|mypy|isort|flake8' ;\
+	fi
+
+# Apply formatting requirements and perform checks
+format:
+	{ . venv/bin/activate || venv/Scripts/activate.bat ; } && \
+	black . && isort . && flake8 && mypy

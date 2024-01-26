@@ -15,7 +15,7 @@ def use_localstack() -> None:
         enable_local_endpoints()
         patch_expand_host_prefix()
     except ImportError:
-        from localstack_client import (  # type: ignore
+        from localstack_client import (  # type: ignore # isort: skip
             session as localstack_client_session,
         )
 

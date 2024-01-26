@@ -1,16 +1,17 @@
 import csv
-from pathlib import Path
-import unittest
-import boto3  # type: ignore
 import functools
+import unittest
 from datetime import datetime
-from subprocess import check_call
-from pyspark.sql import SparkSession  # type: ignore
-from boto3.resources.base import ServiceResource  # type: ignore
 from io import BytesIO, StringIO
+from pathlib import Path
+from subprocess import check_call
 from time import sleep
 from typing import Any, Callable, List, Optional
+
+import boto3  # type: ignore
+from boto3.resources.base import ServiceResource  # type: ignore
 from localstack_s3_pyspark.boto3 import use_localstack
+from pyspark.sql import SparkSession  # type: ignore
 
 TESTS_PATH: Path = Path(__file__).absolute().parent
 TEST_ROOT: str = "test-root"
