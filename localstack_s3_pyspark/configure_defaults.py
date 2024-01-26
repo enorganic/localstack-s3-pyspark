@@ -304,7 +304,7 @@ def configure_defaults(
             spark_defaults["spark.hadoop.fs.s3a.endpoint"] = "localhost:4566"
             spark_defaults["spark.hadoop.fs.s3a.access.key"] = "accesskey"
             spark_defaults["spark.hadoop.fs.s3a.secret.key"] = "secretkey"
-            spark_defaults["spark.driver.host"] = "localstack"
+            spark_defaults["spark.driver.host"] = "localhost"
         else:
             spark_defaults.pop(
                 "spark.hadoop.fs.s3a.connection.ssl.enabled", None
