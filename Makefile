@@ -1,6 +1,6 @@
 # python 3.6 is used, for the time being, in order to ensure compatibility
 install:
-	{ python3.7 -m venv venv || py -3.7 -m venv venv ; } && \
+	{ python3.8 -m venv venv || py -3.8 -m venv venv ; } && \
 	{ . venv/bin/activate || venv/Scripts/activate.bat ; } && \
 	{ pip3 install --upgrade pip wheel || echo ""; } && \
 	pip3 install\
@@ -18,6 +18,16 @@ ci-install:
 	 -r requirements.txt\
 	 -e . && \
 	echo "Success!"
+
+reinstall:
+	{ rm -R venv || echo "" ; } && \
+	{ python3.8 -m venv venv || py -3.8 -m venv venv ; } && \
+	{ . venv/bin/activate || venv/Scripts/activate.bat ; } && \
+	pip install --upgrade pip && \
+	pip install isort flake8 mypy black tox pytest -e . && \
+	{ mypy --install-types --non-interactive || echo "" ; } && \
+	make requirements && \
+	echo "Installation complete"
 
 # Install dependencies locally where available
 editable:
