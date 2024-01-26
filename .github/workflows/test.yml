@@ -42,7 +42,7 @@ jobs:
     - name: Install docker on windows
       if: runner.os == 'windows'
       run: |
-        choco install docker-compose docker-cli && \
+        choco install docker-cli && \
         choco upgrade docker-compose docker-cli
     - name: install
       run: make ci-install
