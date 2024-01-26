@@ -47,8 +47,7 @@ class TestS3(unittest.TestCase):
     @classmethod
     def setUpClass(cls) -> None:
         command: List[str] = [
-            "docker",
-            "compose",
+            "docker-compose",
             "-f",
             str(TESTS_PATH.joinpath("docker-compose.yml")),
             "--project-directory",
@@ -67,8 +66,7 @@ class TestS3(unittest.TestCase):
     @classmethod
     def tearDownClass(cls) -> None:
         command: List[str] = [
-            "docker",
-            "compose",
+            "docker-compose",
             "-f",
             str(TESTS_PATH.joinpath("docker-compose.yml")),
             "--project-directory",
