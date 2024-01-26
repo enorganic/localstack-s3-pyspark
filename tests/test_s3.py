@@ -46,8 +46,7 @@ class TestS3(unittest.TestCase):
 
     @classmethod
     def setUpClass(cls) -> None:
-        command: List[str] = [
-            "docker-compose",
+        arguments: List[str] = [
             "-f",
             str(TESTS_PATH.joinpath("docker-compose.yml")),
             "--project-directory",
@@ -55,29 +54,50 @@ class TestS3(unittest.TestCase):
             "up",
             "-d",
         ]
-        print(" ".join(command))
-        check_call(
-            command,
-            universal_newlines=True,
-        )
+        command: List[str]
+        try:
+            command = ["docker-compose"] + arguments
+            print(" ".join(arguments))
+            check_call(
+                ["docker-compose"] + arguments,
+                universal_newlines=True,
+            )
+            print(" ".join(command))
+        except FileNotFoundError:
+            command = ["docker", "compose"] + arguments
+            check_call(
+                command,
+                universal_newlines=True,
+            )
+            print(" ".join(command))
         sleep(20)
         return super().setUpClass()
 
     @classmethod
     def tearDownClass(cls) -> None:
-        command: List[str] = [
-            "docker-compose",
+        arguments: List[str] = [
             "-f",
             str(TESTS_PATH.joinpath("docker-compose.yml")),
             "--project-directory",
             str(TESTS_PATH),
             "down",
         ]
-        print(" ".join(command))
-        check_call(
-            command,
-            universal_newlines=True,
-        )
+        command: List[str]
+        try:
+            command = ["docker-compose"] + arguments
+            print(" ".join(command))
+            check_call(
+                ["docker-compose"] + arguments,
+                universal_newlines=True,
+            )
+            print(" ".join(command))
+        except FileNotFoundError:
+            command = ["docker", "compose"] + arguments
+            check_call(
+                command,
+                universal_newlines=True,
+            )
+            print(" ".join(command))
         return super().tearDownClass()
 
     @property  # type: ignore
