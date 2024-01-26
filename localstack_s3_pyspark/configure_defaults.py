@@ -289,18 +289,18 @@ def configure_defaults(
         add_jar(
             f"org.apache.hadoop:hadoop-aws:{hadoop_version}", spark_defaults
         )
-        spark_defaults[
-            "spark.hadoop.fs.s3.impl"
-        ] = "org.apache.hadoop.fs.s3a.S3AFileSystem"
+        spark_defaults["spark.hadoop.fs.s3.impl"] = (
+            "org.apache.hadoop.fs.s3a.S3AFileSystem"
+        )
         spark_defaults["spark.hadoop.fs.s3a.path.style.access"] = "true"
         spark_defaults["spark.hadoop.fs.s3a.fast.upload"] = "true"
         spark_defaults["spark.hadoop.fs.s3a.fast.upload.buffer"] = "bytebuffer"
         spark_defaults["spark.hadoop.fs.s3a.change.detection.mode"] = "none"
         spark_defaults["spark.hadoop.fs.s3a.attempts.maximum"] = "3"
         if use_localstack:
-            spark_defaults[
-                "spark.hadoop.fs.s3a.connection.ssl.enabled"
-            ] = "false"
+            spark_defaults["spark.hadoop.fs.s3a.connection.ssl.enabled"] = (
+                "false"
+            )
             spark_defaults["spark.hadoop.fs.s3a.endpoint"] = "localhost:4566"
             spark_defaults["spark.hadoop.fs.s3a.access.key"] = "accesskey"
             spark_defaults["spark.hadoop.fs.s3a.secret.key"] = "secretkey"

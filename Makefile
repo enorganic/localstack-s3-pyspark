@@ -23,8 +23,8 @@ reinstall:
 	{ rm -R venv || echo "" ; } && \
 	{ python3.8 -m venv venv || py -3.8 -m venv venv ; } && \
 	{ . venv/bin/activate || venv/Scripts/activate.bat ; } && \
-	pip install --upgrade pip && \
-	pip install isort flake8 mypy black tox pytest -e . && \
+	pip3 install --upgrade pip && \
+	pip3 install isort flake8 mypy black tox pytest -e . && \
 	{ mypy --install-types --non-interactive || echo "" ; } && \
 	make requirements && \
 	echo "Installation complete"
