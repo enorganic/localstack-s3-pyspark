@@ -1,4 +1,4 @@
-# Setup your venv and install dependencies for local development
+# Setup your venv and install dependencies for local devel
 install:
 	{ python3.8 -m venv venv || py -3.8 -m venv venv ; } && \
 	{ . venv/bin/activate || venv/Scripts/activate.bat ; } && \
