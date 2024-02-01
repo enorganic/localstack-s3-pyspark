@@ -36,7 +36,10 @@ jobs:
         java-version: 8
     - name: Install docker on macos
       if: runner.os == 'macos'
-      run: brew install docker
+      run: |
+        brew install docker && \
+        colima start && \
+        sudo ln -sf $HOME/.colima/default/docker.sock /var/run/docker.sock
     - name: Install docker on windows
       if: runner.os == 'windows'
       run: choco install docker-cli
