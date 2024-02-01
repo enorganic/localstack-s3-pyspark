@@ -4,7 +4,7 @@ import unittest
 from datetime import datetime
 from io import BytesIO, StringIO
 from pathlib import Path
-from subprocess import check_call
+from subprocess import check_call, list2cmdline
 from time import sleep
 from typing import Any, Callable, List, Optional
 
@@ -47,7 +47,7 @@ class TestS3(unittest.TestCase):
     @classmethod
     def setUpClass(cls) -> None:
         arguments: List[str] = [
-            "-f",
+            "--file",
             str(TESTS_PATH.joinpath("docker-compose.yml")),
             "--project-directory",
             str(TESTS_PATH),
@@ -62,14 +62,20 @@ class TestS3(unittest.TestCase):
                 ["docker-compose"] + arguments,
                 universal_newlines=True,
             )
-            print(" ".join(command))
+            print(list2cmdline(command))
         except FileNotFoundError:
-            command = ["docker", "compose"] + arguments
-            check_call(
-                command,
-                universal_newlines=True,
-            )
-            print(" ".join(command))
+            try:
+                command = ["docker", "compose"] + arguments
+                check_call(
+                    command,
+                    universal_newlines=True,
+                )
+                print(list2cmdline(command))
+            except Exception:
+                check_call(
+                    ["docker", "compose", "--help"], universal_newlines=True
+                )
+                raise
         sleep(20)
         return super().setUpClass()
 
