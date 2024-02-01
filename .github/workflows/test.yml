@@ -37,7 +37,7 @@ jobs:
     - name: Install docker on macos
       if: runner.os == 'macos'
       run: |
-        brew install docker && \
+        brew install docker docker-compose && \
         colima start && \
         sudo ln -sf $HOME/.colima/default/docker.sock /var/run/docker.sock
     - name: Install docker on windows
