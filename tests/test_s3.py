@@ -4,7 +4,7 @@ import unittest
 from datetime import datetime
 from io import BytesIO, StringIO
 from pathlib import Path
-from subprocess import check_call, list2cmdline
+from subprocess import check_call, check_output, list2cmdline
 from time import sleep
 from typing import Any, Callable, List, Optional
 
@@ -63,7 +63,7 @@ class TestS3(unittest.TestCase):
                 universal_newlines=True,
             )
             print(list2cmdline(command))
-        except FileNotFoundError:
+        except Exception:
             try:
                 command = ["docker", "compose"] + arguments
                 check_call(
@@ -72,8 +72,10 @@ class TestS3(unittest.TestCase):
                 )
                 print(list2cmdline(command))
             except Exception:
-                check_call(
-                    ["docker", "compose", "--help"], universal_newlines=True
+                print(
+                    check_output(
+                        ["docker", "compose", "--help"], encoding="utf-8"
+                    )
                 )
                 raise
         sleep(20)
