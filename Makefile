@@ -1,6 +1,9 @@
+# This is the version of python used for local development
+PYTHON_VERSION := 3.11
+
 # Setup your venv and install dependencies for local devel
 install:
-	{ python3.8 -m venv venv || py -3.8 -m venv venv ; } && \
+	{ python$(PYTHON_VERSION) -m venv venv || py -$(PYTHON_VERSION) -m venv venv ; } && \
 	{ . venv/bin/activate || venv/Scripts/activate.bat ; } && \
 	{ pip3 install --upgrade pip || echo ""; } && \
 	pip3 install\
@@ -23,7 +26,7 @@ ci-install:
 # Rebuild your virtual environment from scratch
 reinstall:
 	{ rm -R venv || echo "" ; } && \
-	{ python3.8 -m venv venv || py -3.8 -m venv venv ; } && \
+	{ python$(PYTHON_VERSION) -m venv venv || py -$(PYTHON_VERSION) -m venv venv ; } && \
 	{ . venv/bin/activate || venv/Scripts/activate.bat ; } && \
 	pip3 install --upgrade pip && \
 	pip3 install daves-dev-tools isort flake8 mypy black tox pytest -e '.[all]' && \
@@ -86,7 +89,7 @@ requirements:
 # Run all tests
 test:
 	{ . venv/bin/activate || venv/Scripts/activate.bat ; } && \
-	if [[ "$$(python -V)" = "Python 3.8."* ]] ;\
+	if [[ "$$(python -V)" = "Python $(PYTHON_VERSION)."* ]] ;\
 	then tox run -r ;\
 	else tox run -r --skip-env 'black|mypy|isort|flake8' ;\
 	fi
