@@ -40,8 +40,7 @@ jobs:
         brew install docker docker-compose && \
         sudo ln -sf $HOME/.colima/default/docker.sock /var/run/docker.sock && \
         mkdir -p ~/.docker/cli-plugins && \
-        ln -sfn /usr/local/opt/docker-compose/bin/docker-compose ~/.docker/cli-plugins/docker-compose && \
-        colima start
+        ln -sfn /usr/local/opt/docker-compose/bin/docker-compose ~/.docker/cli-plugins/docker-compose
     - name: Install docker on windows
       if: runner.os == 'windows'
       run: choco install docker-cli
