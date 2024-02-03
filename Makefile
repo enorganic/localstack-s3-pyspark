@@ -1,5 +1,5 @@
 # This is the version of python used for local development
-PYTHON_VERSION := 3.11
+PYTHON_VERSION := 3.8
 
 # Setup your venv and install dependencies for local devel
 install:

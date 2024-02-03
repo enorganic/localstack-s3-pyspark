@@ -10,10 +10,12 @@ colorama==0.4.6
 daves-dev-tools==2.0.13
 distlib==0.3.8
 docutils==0.20.1
+exceptiongroup==1.2.0
 filelock
 flake8==7.0.0
 idna==3.6
 importlib-metadata
+importlib-resources
 iniconfig==2.0.0
 isort==5.13.2
 jaraco.classes==3.3.0
@@ -54,6 +56,6 @@ tomli==2.0.1
 tox==4.12.1
 twine==4.0.2
 typing-extensions==4.9.0
-urllib3==2.0.7
+urllib3==1.26.18
 virtualenv==20.25.0
 zipp==3.17.0
