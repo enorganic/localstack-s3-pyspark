@@ -1,3 +1,4 @@
+SHELL := bash
 # This is the version of python used for local development
 PYTHON_VERSION := 3.8
 
@@ -36,13 +37,6 @@ reinstall:
 	make requirements && \
 	echo "Installation complete"
 
-# Install dependencies locally where available
-editable:
-	{ . venv/bin/activate || venv/Scripts/activate.bat ; } && \
-	daves-dev-tools install-editable --upgrade-strategy eager && \
-	make requirements && \
-	echo "Success!"
-
 # Cleanup unused packages, and Git-ignored files (such as build files)
 clean:
 	{ . venv/bin/activate || venv/Scripts/activate.bat ; } && \
@@ -64,10 +58,10 @@ distribute:
 upgrade:
 	{ . venv/bin/activate || venv/Scripts/activate.bat ; } && \
 	daves-dev-tools requirements freeze\
-	 -nv '*' . pyproject.toml tox.ini daves-dev-tools isort flake8 mypy black tox pytest \
+	 -nv '*' '.[all]' pyproject.toml tox.ini daves-dev-tools isort flake8 mypy black tox pytest \
 	 > .requirements.txt && \
 	pip3 install --upgrade --upgrade-strategy eager\
-	 -r .requirements.txt && \
+	 -r .requirements.txt '.[all]' && \
 	rm .requirements.txt && \
 	make requirements
 
