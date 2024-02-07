@@ -1,16 +1,17 @@
 import csv
-from pathlib import Path
-import unittest
-import boto3  # type: ignore
 import functools
+import unittest
 from datetime import datetime
-from subprocess import check_call
-from pyspark.sql import SparkSession  # type: ignore
-from boto3.resources.base import ServiceResource  # type: ignore
 from io import BytesIO, StringIO
+from pathlib import Path
+from subprocess import check_call, check_output, list2cmdline
 from time import sleep
 from typing import Any, Callable, List, Optional
+
+import boto3  # type: ignore
+from boto3.resources.base import ServiceResource  # type: ignore
 from localstack_s3_pyspark.boto3 import use_localstack
+from pyspark.sql import SparkSession  # type: ignore
 
 TESTS_PATH: Path = Path(__file__).absolute().parent
 TEST_ROOT: str = "test-root"
@@ -45,40 +46,66 @@ class TestS3(unittest.TestCase):
 
     @classmethod
     def setUpClass(cls) -> None:
-        command: List[str] = [
-            "docker",
-            "compose",
-            "-f",
+        arguments: List[str] = [
+            "--file",
             str(TESTS_PATH.joinpath("docker-compose.yml")),
             "--project-directory",
             str(TESTS_PATH),
             "up",
             "-d",
         ]
-        print(" ".join(command))
-        check_call(
-            command,
-            universal_newlines=True,
-        )
+        command: List[str]
+        try:
+            command = ["docker-compose"] + arguments
+            print(" ".join(arguments))
+            check_call(
+                ["docker-compose"] + arguments,
+                universal_newlines=True,
+            )
+            print(list2cmdline(command))
+        except Exception:
+            try:
+                command = ["docker", "compose"] + arguments
+                check_call(
+                    command,
+                    universal_newlines=True,
+                )
+                print(list2cmdline(command))
+            except Exception:
+                print(
+                    check_output(
+                        ["docker", "compose", "--help"], encoding="utf-8"
+                    )
+                )
+                raise
         sleep(20)
         return super().setUpClass()
 
     @classmethod
     def tearDownClass(cls) -> None:
-        command: List[str] = [
-            "docker",
-            "compose",
+        arguments: List[str] = [
             "-f",
             str(TESTS_PATH.joinpath("docker-compose.yml")),
             "--project-directory",
             str(TESTS_PATH),
             "down",
         ]
-        print(" ".join(command))
-        check_call(
-            command,
-            universal_newlines=True,
-        )
+        command: List[str]
+        try:
+            command = ["docker-compose"] + arguments
+            print(" ".join(command))
+            check_call(
+                ["docker-compose"] + arguments,
+                universal_newlines=True,
+            )
+            print(" ".join(command))
+        except FileNotFoundError:
+            command = ["docker", "compose"] + arguments
+            check_call(
+                command,
+                universal_newlines=True,
+            )
+            print(" ".join(command))
         return super().tearDownClass()
 
     @property  # type: ignore

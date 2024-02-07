@@ -4,26 +4,17 @@ import os
 import re
 import shutil
 import sys
-import lxml.etree  # type: ignore
-from py4j.protocol import Py4JJavaError  # type: ignore
 from collections import OrderedDict
+from dataclasses import astuple, dataclass
 from http.client import HTTPResponse
 from inspect import Traceback
 from itertools import chain
 from subprocess import check_output
-from typing import (
-    Any,
-    Callable,
-    Dict,
-    IO,
-    Iterable,
-    List,
-    Set,
-    Tuple,
-    Union,
-)
+from typing import IO, Any, Callable, Dict, Iterable, List, Set, Tuple, Union
 from urllib.request import urlopen
-from dataclasses import astuple, dataclass
+
+import lxml.etree  # type: ignore
+from py4j.protocol import Py4JJavaError  # type: ignore
 from pyspark.java_gateway import launch_gateway  # type: ignore
 from pyspark.sql import SparkSession  # type: ignore
 
@@ -298,21 +289,22 @@ def configure_defaults(
         add_jar(
             f"org.apache.hadoop:hadoop-aws:{hadoop_version}", spark_defaults
         )
-        spark_defaults[
-            "spark.hadoop.fs.s3.impl"
-        ] = "org.apache.hadoop.fs.s3a.S3AFileSystem"
+        spark_defaults["spark.hadoop.fs.s3.impl"] = (
+            "org.apache.hadoop.fs.s3a.S3AFileSystem"
+        )
         spark_defaults["spark.hadoop.fs.s3a.path.style.access"] = "true"
         spark_defaults["spark.hadoop.fs.s3a.fast.upload"] = "true"
         spark_defaults["spark.hadoop.fs.s3a.fast.upload.buffer"] = "bytebuffer"
         spark_defaults["spark.hadoop.fs.s3a.change.detection.mode"] = "none"
         spark_defaults["spark.hadoop.fs.s3a.attempts.maximum"] = "3"
         if use_localstack:
-            spark_defaults[
-                "spark.hadoop.fs.s3a.connection.ssl.enabled"
-            ] = "false"
+            spark_defaults["spark.hadoop.fs.s3a.connection.ssl.enabled"] = (
+                "false"
+            )
             spark_defaults["spark.hadoop.fs.s3a.endpoint"] = "localhost:4566"
             spark_defaults["spark.hadoop.fs.s3a.access.key"] = "accesskey"
             spark_defaults["spark.hadoop.fs.s3a.secret.key"] = "secretkey"
+            spark_defaults["spark.driver.host"] = "localhost"
         else:
             spark_defaults.pop(
                 "spark.hadoop.fs.s3a.connection.ssl.enabled", None

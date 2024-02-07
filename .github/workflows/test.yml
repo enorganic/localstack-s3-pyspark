@@ -1,0 +1,51 @@
+name: test
+on:
+  pull_request:
+    paths:
+    - localstack-s3-pyspark/**
+    - pyproject.toml
+    - setup.py
+    - setup.cfg
+    - tests/**
+    - requirements.txt
+    - tox.ini
+    - .github/**
+jobs:
+  test:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os:
+        - ubuntu-latest
+        # - windows-latest  # No manifest for windows yet
+        # - macos-latest
+        python:
+        - 3.8
+        - 3.9
+        - '3.10'
+        - 3.11
+    steps:
+    - uses: actions/checkout@v4
+    - name: Setup Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: ${{ matrix.python }}
+    - uses: actions/setup-java@v4
+      with:
+        distribution: zulu
+        java-version: 8
+    - name: Install docker on macos
+      if: runner.os == 'macos'
+      run: |
+        brew install docker docker-compose colima && \
+        mkdir -p ~/.docker/cli-plugins && \
+        ln -sfn /usr/local/opt/docker-compose/bin/docker-compose ~/.docker/cli-plugins/docker-compose && \
+        sudo ln -sf ~/.colima/default/docker.sock /var/run/docker.sock && \
+        colima start
+    - name: Install docker on windows
+      if: runner.os == 'windows'
+      run: choco install docker-cli
+    - name: install
+      run: make ci-install
+    - name: test
+      run: make test
