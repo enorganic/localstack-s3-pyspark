@@ -47,10 +47,11 @@ distribute:
 upgrade:
 	{ . venv/bin/activate || venv/Scripts/activate.bat ; } && \
 	daves-dev-tools requirements freeze\
-	 -nv '*' . pyproject.toml tox.ini daves-dev-tools\
+	 -nv '*'\
+	 '.[all]' pyproject.toml tox.ini daves-dev-tools\
 	 > .requirements.txt && \
 	pip3 install --upgrade --upgrade-strategy eager\
-	 -r .requirements.txt && \
+	 -r .requirements.txt '.[all]' && \
 	rm .requirements.txt && \
 	make requirements
 
